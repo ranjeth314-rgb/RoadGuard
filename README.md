@@ -1,4 +1,3 @@
-
 # 🛡️ RoadGuard — Crowd-Sourced Road Hazard Reporting
 
 > **Report. Verify. Navigate Safely.**
