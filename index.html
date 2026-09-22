@@ -5,216 +5,192 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RoadGuard - Crowd-Sourced Road Hazard Reporting</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.5; }
-
-  /* Navbar */
-  .navbar { background: #1e293b; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; gap: 6px; }
-  .logo { font-size: 20px; font-weight: 700; color: #f97316; display: flex; align-items: center; gap: 8px; }
-  .logo svg { flex-shrink: 0; }
-  .nav-links { display: flex; gap: 2px; flex-wrap: wrap; }
-  .nav-links button { padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 500; color: #94a3b8; background: none; border: none; font-family: inherit; transition: all 0.2s; }
-  .nav-links button:hover { background: #334155; color: #fff; }
-  .nav-links button.active { background: #f97316; color: #fff; }
-
-  /* Pages */
-  .page { display: none; }
-  .page.active { display: block; }
-
-  /* Hero */
-  .hero { text-align: center; padding: 40px 16px 30px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1a1a2e 100%); }
-  .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
-  .hero h1 span { color: #f97316; }
-  .hero p { font-size: 15px; color: #94a3b8; max-width: 600px; margin: 0 auto 24px; }
-  .hero-badge { display: inline-block; background: #f9731620; color: #f97316; padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; }
-
-  /* Stats */
-  .stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 24px 16px; max-width: 500px; margin: 0 auto; }
-  .stat-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 16px; text-align: center; }
-  .stat-value { font-size: 28px; font-weight: 700; color: #f97316; font-family: monospace; }
-  .stat-label { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
-
-  /* Features */
-  .section { padding: 32px 16px; max-width: 1100px; margin: 0 auto; }
-  .section-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; text-align: center; }
-  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-  .feature-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; transition: all 0.2s; }
-  .feature-card:hover { border-color: #f97316; transform: translateY(-2px); }
-  .feature-icon { font-size: 28px; margin-bottom: 10px; }
-  .feature-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-  .feature-card p { font-size: 12px; color: #94a3b8; }
-
-  /* Report Page */
-  .report-container { max-width: 420px; margin: 30px auto; padding: 0 16px; }
-  .phone-frame { background: #1e293b; border: 2px solid #334155; border-radius: 24px; padding: 20px; }
-  .phone-notch { width: 100px; height: 20px; background: #0f172a; border-radius: 0 0 12px 12px; margin: -20px auto 16px; }
-  .report-header { text-align: center; margin-bottom: 20px; }
-  .report-header h2 { font-size: 18px; font-weight: 700; }
-  .report-header p { font-size: 12px; color: #94a3b8; }
-  .form-group { margin-bottom: 14px; }
-  .form-label { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: block; }
-  .form-input { width: 100%; padding: 10px 14px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: #e2e8f0; font-size: 13px; font-family: inherit; resize: vertical; }
-  .form-input:focus { outline: none; border-color: #f97316; }
-
-  /* Hazard Types */
-  .hazard-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .hazard-option { text-align: center; padding: 14px 6px; background: #0f172a; border: 2px solid #334155; border-radius: 12px; cursor: pointer; transition: all 0.2s; font-size: 11px; font-weight: 500; }
-  .hazard-option:hover { border-color: #f97316; }
-  .hazard-option.selected { border-color: #f97316; background: #f9731615; }
-  .hazard-option .icon { font-size: 24px; display: block; margin-bottom: 4px; }
-
-  /* GPS Bar */
-  .gps-bar { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .gps-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .gps-dot.active { background: #22c55e; animation: pulse 2s ease-in-out infinite; }
-  .gps-dot.loading { background: #eab308; animation: pulse 1s ease-in-out infinite; }
-  .gps-dot.error { background: #ef4444; }
-  .gps-text { font-size: 11px; color: #94a3b8; }
-  .gps-coords { font-size: 12px; font-family: monospace; color: #e2e8f0; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-  /* Photo Upload */
-  .photo-upload-area { border: 2px dashed #334155; border-radius: 12px; overflow: hidden; transition: all 0.2s; }
-  .photo-upload-area:hover { border-color: #f97316; }
-  .photo-trigger { display: flex; flex-direction: column; align-items: center; padding: 16px; cursor: pointer; }
-  .photo-trigger .cam-icon { width: 48px; height: 48px; background: #f9731615; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
-  .photo-trigger .cam-text { font-size: 13px; font-weight: 600; }
-  .photo-trigger .cam-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
-  .photo-options { display: none; background: #0f172a; border-top: 1px solid #334155; }
-  .photo-options.show { display: block; }
-  .photo-option-btn { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; transition: all 0.15s; border-bottom: 1px solid #1e293b; position: relative; }
-  .photo-option-btn:last-child { border-bottom: none; }
-  .photo-option-btn:hover { background: #1e293b; }
-  .photo-option-btn .opt-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-  .photo-option-btn .opt-text h4 { font-size: 12px; font-weight: 600; }
-  .photo-option-btn .opt-text p { font-size: 10px; color: #64748b; }
-
-  /* Photo Preview */
-  .photo-preview { display: none; padding: 12px; }
-  .photo-preview.show { display: block; }
-  .photo-preview img { width: 100%; border-radius: 8px; max-height: 200px; object-fit: cover; }
-  .photo-preview .preview-info { text-align: center; margin-top: 8px; font-size: 11px; color: #22c55e; font-weight: 600; }
-  .photo-preview .remove-btn { display: block; margin: 8px auto 0; padding: 6px 16px; background: #ef444420; color: #ef4444; border: none; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; }
-
-  /* Submit Button */
-  .submit-btn { width: 100%; padding: 12px; background: #f97316; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
-  .submit-btn:hover { background: #ea580c; }
-  .submit-btn:disabled { background: #475569; cursor: not-allowed; }
-
-  /* Success Toast */
-  .toast { display: none; text-align: center; margin-top: 14px; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 600; }
-  .toast.success { display: block; background: #22c55e15; border: 1px solid #22c55e30; color: #22c55e; }
-  .toast.error { display: block; background: #ef444415; border: 1px solid #ef444430; color: #ef4444; }
-
-  /* Map Pages */
-  .map-page-container { max-width: 900px; margin: 20px auto; padding: 0 16px; }
-  .map-page-container h2 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
-  .map-wrapper { background: #1e293b; border: 1px solid #334155; border-radius: 16px; overflow: hidden; }
-  .map-toolbar { background: #1e293b; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; flex-wrap: wrap; gap: 6px; }
-  .map-toolbar h3 { font-size: 13px; font-weight: 600; }
-  .map-legend { display: flex; gap: 10px; flex-wrap: wrap; }
-  .legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #94a3b8; }
-  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
-  #heatmap, #routemap { height: 400px; width: 100%; background: #0f1a2a; }
-
-  /* Route Page */
-  .route-panel { display: grid; grid-template-columns: 1fr; gap: 0; background: #1e293b; border: 1px solid #334155; border-radius: 16px; overflow: hidden; }
-  @media(min-width:700px) { .route-panel { grid-template-columns: 260px 1fr; } }
-  .route-sidebar { padding: 20px; border-bottom: 1px solid #334155; }
-  @media(min-width:700px) { .route-sidebar { border-bottom: none; border-right: 1px solid #334155; } }
-  .route-sidebar h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
-  .route-input-group { margin-bottom: 12px; }
-  .route-input-group label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px; }
-  .route-input { width: 100%; padding: 10px 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; font-size: 12px; font-family: inherit; }
-  .route-btn { width: 100%; padding: 10px; background: #f97316; color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 12px; }
-  .route-info { margin-top: 12px; }
-  .route-option { padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; margin-bottom: 8px; }
-  .route-option.recommended { border-color: #22c55e; }
-  .route-option h4 { font-size: 12px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; }
-  .route-option p { font-size: 10px; color: #94a3b8; margin-top: 4px; }
-  .route-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 600; }
-  .tag-safe { background: #22c55e20; color: #22c55e; }
-
-  /* Civic Dashboard */
-  .civic-container { max-width: 1000px; margin: 30px auto; padding: 0 16px; }
-  .civic-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 8px; }
-  .civic-header h2 { font-size: 18px; font-weight: 700; }
-  .civic-badge { background: #22c55e20; color: #22c55e; padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; }
-  .civic-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-  @media(min-width:600px) { .civic-stats { grid-template-columns: repeat(4, 1fr); } }
-  .civic-stat { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 16px; }
-  .civic-stat .label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
-  .civic-stat .value { font-size: 24px; font-weight: 700; font-family: monospace; margin-top: 4px; }
-  .civic-stat .value.orange { color: #f97316; }
-  .civic-stat .value.red { color: #ef4444; }
-  .civic-stat .value.green { color: #22c55e; }
-  .civic-stat .value.blue { color: #3b82f6; }
-  .civic-table { background: #1e293b; border: 1px solid #334155; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
-  .civic-table-header { padding: 14px 16px; border-bottom: 1px solid #334155; }
-  .civic-table-header h3 { font-size: 14px; font-weight: 600; }
-  .table-scroll { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; min-width: 500px; }
-  th { text-align: left; padding: 8px 14px; font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; border-bottom: 1px solid #334155; }
-  td { padding: 10px 14px; font-size: 12px; border-bottom: 1px solid #0f172a; }
-  tr:hover td { background: #ffffff05; }
-  .priority-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; }
-  .priority-critical { background: #ef444425; color: #ef4444; }
-  .priority-high { background: #f9731625; color: #f97316; }
-  .priority-medium { background: #eab30825; color: #eab308; }
-
-  /* Report List */
-  .report-list { margin-top: 16px; }
-  .report-item { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 12px; margin-bottom: 8px; }
-  .report-item .ri-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .report-item .ri-type { font-size: 12px; font-weight: 600; }
-  .report-item .ri-time { font-size: 10px; color: #64748b; }
-  .report-item .ri-coords { font-size: 11px; font-family: monospace; color: #94a3b8; }
-  .report-item .ri-desc { font-size: 11px; color: #94a3b8; margin-top: 4px; }
-  .report-item .ri-photo { width: 100%; max-height: 120px; object-fit: cover; border-radius: 6px; margin-top: 8px; }
-  .report-item .delete-btn { background: #ef444420; color: #ef4444; border: none; padding: 4px 10px; border-radius: 6px; font-size: 10px; cursor: pointer; font-family: inherit; margin-top: 6px; }
-
-  /* Team Footer */
-  .team-footer { text-align: center; padding: 32px 16px; border-top: 1px solid #334155; margin-top: 32px; }
-  .team-footer h3 { font-size: 16px; font-weight: 700; color: #f97316; margin-bottom: 8px; }
-  .team-footer p { font-size: 12px; color: #64748b; }
-  .team-members { display: flex; justify-content: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
-  .member { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 8px 16px; font-size: 12px; font-weight: 500; }
-
-  /* No reports */
-  .no-reports { text-align: center; padding: 40px 20px; color: #64748b; }
-  .no-reports .big-icon { font-size: 48px; margin-bottom: 12px; }
-  .no-reports p { font-size: 13px; }
-
-  /* Clear button */
-  .clear-btn { background: #ef444420; color: #ef4444; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.5}
+.navbar{background:#1e293b;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #334155;position:sticky;top:0;z-index:1000;flex-wrap:wrap;gap:6px}
+.logo{font-size:20px;font-weight:700;color:#f97316;display:flex;align-items:center;gap:8px}
+.nav-links{display:flex;gap:2px;flex-wrap:wrap}
+.nav-links button{padding:6px 10px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:500;color:#94a3b8;background:none;border:none;font-family:inherit;transition:all .2s}
+.nav-links button:hover{background:#334155;color:#fff}
+.nav-links button.active{background:#f97316;color:#fff}
+.page{display:none}.page.active{display:block}
+.hero{text-align:center;padding:40px 16px 30px;background:linear-gradient(135deg,#1e293b,#0f172a 50%,#1a1a2e)}
+.hero h1{font-size:28px;font-weight:800;margin-bottom:12px}
+.hero h1 span{color:#f97316}
+.hero p{font-size:15px;color:#94a3b8;max-width:600px;margin:0 auto 24px}
+.hero-badge{display:inline-block;background:#f9731620;color:#f97316;padding:6px 16px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:24px 16px;max-width:500px;margin:0 auto}
+.stat-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;text-align:center;transition:all .3s}
+.stat-card:hover{border-color:#f97316;transform:translateY(-2px)}
+.stat-value{font-size:28px;font-weight:700;color:#f97316;font-family:monospace}
+.stat-label{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
+.section{padding:32px 16px;max-width:1100px;margin:0 auto}
+.section-title{font-size:20px;font-weight:700;margin-bottom:20px;text-align:center}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.feature-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;transition:all .2s}
+.feature-card:hover{border-color:#f97316;transform:translateY(-2px)}
+.feature-icon{font-size:28px;margin-bottom:10px}
+.feature-card h3{font-size:14px;font-weight:600;margin-bottom:6px}
+.feature-card p{font-size:12px;color:#94a3b8}
+.report-container{max-width:420px;margin:30px auto;padding:0 16px}
+.phone-frame{background:#1e293b;border:2px solid #334155;border-radius:24px;padding:20px}
+.phone-notch{width:100px;height:20px;background:#0f172a;border-radius:0 0 12px 12px;margin:-20px auto 16px}
+.report-header{text-align:center;margin-bottom:20px}
+.report-header h2{font-size:18px;font-weight:700}
+.report-header p{font-size:12px;color:#94a3b8}
+.form-group{margin-bottom:14px}
+.form-label{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:block}
+.form-input{width:100%;padding:10px 14px;background:#0f172a;border:1px solid #334155;border-radius:10px;color:#e2e8f0;font-size:13px;font-family:inherit;resize:vertical}
+.form-input:focus{outline:none;border-color:#f97316}
+.hazard-types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.hazard-option{text-align:center;padding:14px 6px;background:#0f172a;border:2px solid #334155;border-radius:12px;cursor:pointer;transition:all .2s;font-size:11px;font-weight:500}
+.hazard-option:hover{border-color:#f97316}
+.hazard-option.selected{border-color:#f97316;background:#f9731615}
+.hazard-option .icon{font-size:24px;display:block;margin-bottom:4px}
+.severity-slider{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:linear-gradient(to right,#22c55e,#eab308,#f97316,#ef4444);outline:none;margin:8px 0}
+.severity-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;cursor:pointer;border:3px solid #f97316}
+.severity-labels{display:flex;justify-content:space-between;font-size:9px;color:#64748b}
+.severity-value{display:inline-block;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600}
+.gps-bar{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer;transition:all .2s}
+.gps-bar:hover{border-color:#f97316}
+.gps-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.gps-dot.active{background:#22c55e;animation:pulse 2s ease-in-out infinite}
+.gps-dot.loading{background:#eab308;animation:pulse 1s ease-in-out infinite}
+.gps-dot.error{background:#ef4444}
+.gps-text{font-size:11px;color:#94a3b8}
+.gps-coords{font-size:12px;font-family:monospace;color:#e2e8f0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+#reportMiniMap{height:120px;border-radius:8px;margin-bottom:14px;border:1px solid #334155}
+.photo-upload-area{border:2px dashed #334155;border-radius:12px;overflow:hidden;transition:all .2s}
+.photo-upload-area:hover{border-color:#f97316}
+.photo-trigger{display:flex;flex-direction:column;align-items:center;padding:16px;cursor:pointer}
+.photo-trigger .cam-icon{width:48px;height:48px;background:#f9731615;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.photo-trigger .cam-text{font-size:13px;font-weight:600}
+.photo-trigger .cam-sub{font-size:10px;color:#64748b;margin-top:2px}
+.photo-options{display:none;background:#0f172a;border-top:1px solid #334155}
+.photo-options.show{display:block}
+.photo-option-btn{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:all .15s;border-bottom:1px solid #1e293b}
+.photo-option-btn:last-child{border-bottom:none}
+.photo-option-btn:hover{background:#1e293b}
+.photo-option-btn .opt-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.photo-option-btn .opt-text h4{font-size:12px;font-weight:600}
+.photo-option-btn .opt-text p{font-size:10px;color:#64748b}
+.photo-preview{display:none;padding:12px}
+.photo-preview.show{display:block}
+.photo-preview img{width:100%;border-radius:8px;max-height:200px;object-fit:cover}
+.photo-preview .preview-info{text-align:center;margin-top:8px;font-size:11px;color:#22c55e;font-weight:600}
+.photo-preview .remove-btn{display:block;margin:8px auto 0;padding:6px 16px;background:#ef444420;color:#ef4444;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.submit-btn{width:100%;padding:12px;background:#f97316;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.submit-btn:hover{background:#ea580c}
+.toast{display:none;text-align:center;margin-top:14px;padding:10px;border-radius:10px;font-size:12px;font-weight:600}
+.toast.success{display:block;background:#22c55e15;border:1px solid #22c55e30;color:#22c55e}
+.toast.error{display:block;background:#ef444415;border:1px solid #ef444430;color:#ef4444}
+.map-page-container{max-width:900px;margin:20px auto;padding:0 16px}
+.map-page-container h2{font-size:18px;font-weight:700;margin-bottom:12px}
+.map-wrapper{background:#1e293b;border:1px solid #334155;border-radius:16px;overflow:hidden}
+.map-toolbar{background:#1e293b;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #334155;flex-wrap:wrap;gap:6px}
+.map-toolbar h3{font-size:13px;font-weight:600}
+.map-legend{display:flex;gap:10px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+#heatmap,#routemap{height:420px;width:100%;background:#0f1a2a}
+.map-stats{display:flex;gap:12px;padding:12px 16px;background:#0f172a;border-top:1px solid #334155;flex-wrap:wrap}
+.map-stat-item{font-size:11px;color:#94a3b8}
+.map-stat-item strong{color:#f97316}
+.route-panel{display:grid;grid-template-columns:1fr;gap:0;background:#1e293b;border:1px solid #334155;border-radius:16px;overflow:hidden}
+@media(min-width:700px){.route-panel{grid-template-columns:260px 1fr}}
+.route-sidebar{padding:20px;border-bottom:1px solid #334155}
+@media(min-width:700px){.route-sidebar{border-bottom:none;border-right:1px solid #334155}}
+.route-sidebar h3{font-size:15px;font-weight:600;margin-bottom:16px}
+.route-input-group{margin-bottom:12px}
+.route-input-group label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px}
+.route-input{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:12px;font-family:inherit}
+.route-input:focus{outline:none;border-color:#f97316}
+.route-btn{width:100%;padding:10px;background:#f97316;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:12px}
+.route-btn:hover{background:#ea580c}
+.route-option{padding:10px;background:#0f172a;border:1px solid #334155;border-radius:10px;margin-bottom:8px}
+.route-option.recommended{border-color:#22c55e}
+.route-option h4{font-size:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
+.route-option p{font-size:10px;color:#94a3b8;margin-top:4px}
+.route-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:600}
+.tag-safe{background:#22c55e20;color:#22c55e}
+.tag-risky{background:#ef444420;color:#ef4444}
+.civic-container{max-width:1000px;margin:30px auto;padding:0 16px}
+.civic-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px}
+.civic-header h2{font-size:18px;font-weight:700}
+.civic-badge{background:#22c55e20;color:#22c55e;padding:4px 12px;border-radius:8px;font-size:11px;font-weight:600}
+.civic-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+@media(min-width:600px){.civic-stats{grid-template-columns:repeat(4,1fr)}}
+.civic-stat{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px}
+.civic-stat .label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em}
+.civic-stat .value{font-size:24px;font-weight:700;font-family:monospace;margin-top:4px}
+.civic-stat .value.orange{color:#f97316}
+.civic-stat .value.red{color:#ef4444}
+.civic-stat .value.green{color:#22c55e}
+.civic-stat .value.blue{color:#3b82f6}
+.civic-table{background:#1e293b;border:1px solid #334155;border-radius:12px;overflow:hidden;margin-bottom:20px}
+.civic-table-header{padding:14px 16px;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
+.civic-table-header h3{font-size:14px;font-weight:600}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:500px}
+th{text-align:left;padding:8px 14px;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.05em;font-weight:500;border-bottom:1px solid #334155}
+td{padding:10px 14px;font-size:12px;border-bottom:1px solid #0f172a}
+tr:hover td{background:#ffffff05}
+.priority-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600}
+.priority-critical{background:#ef444425;color:#ef4444}
+.priority-high{background:#f9731625;color:#f97316}
+.priority-medium{background:#eab30825;color:#eab308}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:140px;padding:16px}
+.bar-col{display:flex;flex-direction:column;align-items:center;flex:1}
+.bar{width:100%;max-width:36px;border-radius:4px 4px 0 0;transition:all .5s}
+.bar-label{font-size:9px;color:#64748b;margin-top:6px;text-align:center}
+.bar-value{font-size:10px;font-weight:600;margin-bottom:4px;font-family:monospace}
+.report-item{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:12px;margin-bottom:8px}
+.report-item .ri-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.report-item .ri-type{font-size:12px;font-weight:600}
+.report-item .ri-time{font-size:10px;color:#64748b}
+.report-item .ri-coords{font-size:11px;font-family:monospace;color:#94a3b8}
+.report-item .ri-desc{font-size:11px;color:#94a3b8;margin-top:4px}
+.report-item .ri-severity{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;margin-top:4px}
+.report-item .ri-photo{width:100%;max-height:120px;object-fit:cover;border-radius:6px;margin-top:8px}
+.report-item .delete-btn{background:#ef444420;color:#ef4444;border:none;padding:4px 10px;border-radius:6px;font-size:10px;cursor:pointer;font-family:inherit;margin-top:6px}
+.team-footer{text-align:center;padding:32px 16px;border-top:1px solid #334155;margin-top:32px}
+.team-footer h3{font-size:16px;font-weight:700;color:#f97316;margin-bottom:8px}
+.team-footer p{font-size:12px;color:#64748b}
+.team-members{display:flex;justify-content:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+.member{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:500}
+.no-reports{text-align:center;padding:40px 20px;color:#64748b}
+.no-reports .big-icon{font-size:48px;margin-bottom:12px}
+.clear-btn{background:#ef444420;color:#ef4444;border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.export-btn{background:#3b82f620;color:#3b82f6;border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
 </style>
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar">
   <div class="logo">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
     RoadGuard
   </div>
   <div class="nav-links" id="navLinks">
-    <button class="active" onclick="showPage('home')">Home</button>
-    <button onclick="showPage('report')">Report</button>
-    <button onclick="showPage('heatmap')">Heatmap</button>
-    <button onclick="showPage('route')">Safe Route</button>
-    <button onclick="showPage('civic')">Dashboard</button>
+    <button class="active" data-page="home">Home</button>
+    <button data-page="report">Report</button>
+    <button data-page="heatmap">Heatmap</button>
+    <button data-page="route">Safe Route</button>
+    <button data-page="civic">Dashboard</button>
   </div>
 </nav>
 
-<!-- ==================== HOME ==================== -->
+<!-- HOME -->
 <div class="page active" id="page-home">
   <div class="hero">
     <div class="hero-badge">🏆 Smart Move Hackathon — Team Spark</div>
     <h1>Report. Verify. <span>Navigate Safely.</span></h1>
     <p>A crowd-sourced platform that turns commuter reports into verified hazard hotspots, live heatmaps, and safer routes.</p>
-    <button class="submit-btn" style="width:auto; padding:12px 32px;" onclick="showPage('report')">⚡ Report a Hazard Now</button>
+    <button class="submit-btn" style="width:auto;padding:12px 32px" id="heroReportBtn">⚡ Report a Hazard Now</button>
   </div>
   <div class="stats-row">
     <div class="stat-card"><div class="stat-value" id="stat-reports">0</div><div class="stat-label">Reports Filed</div></div>
@@ -223,24 +199,24 @@
     <div class="stat-card"><div class="stat-value" id="stat-waterlog">0</div><div class="stat-label">Waterlogging</div></div>
   </div>
   <div class="section">
-    <div class="section-title">✨ Key Features</div>
+    <div class="section-title">✨ Real Working Features</div>
     <div class="features-grid">
-      <div class="feature-card"><div class="feature-icon">📍</div><h3>Real GPS Capture</h3><p>Auto-captures your actual GPS location when reporting hazards.</p></div>
-      <div class="feature-card"><div class="feature-icon">📷</div><h3>Photo Evidence</h3><p>Take photos with camera or upload from gallery with live preview.</p></div>
-      <div class="feature-card"><div class="feature-icon">🗺️</div><h3>Live Heatmap</h3><p>Real OpenStreetMap with hazard markers and heat zones.</p></div>
-      <div class="feature-card"><div class="feature-icon">💾</div><h3>Saved Reports</h3><p>All reports saved locally — persists even after closing browser.</p></div>
-      <div class="feature-card"><div class="feature-icon">🏛️</div><h3>Civic Dashboard</h3><p>Live stats and priority queue updated from real reports.</p></div>
+      <div class="feature-card"><div class="feature-icon">📍</div><h3>Real GPS Capture</h3><p>Auto-captures your actual GPS coordinates when reporting.</p></div>
+      <div class="feature-card"><div class="feature-icon">📷</div><h3>Photo Evidence</h3><p>Camera capture or gallery upload with live preview.</p></div>
+      <div class="feature-card"><div class="feature-icon">🗺️</div><h3>Live Map</h3><p>Real OpenStreetMap with hazard markers and heat zones.</p></div>
+      <div class="feature-card"><div class="feature-icon">💾</div><h3>Saved Reports</h3><p>All reports saved locally — persists after closing browser.</p></div>
+      <div class="feature-card"><div class="feature-icon">🏛️</div><h3>Live Dashboard</h3><p>Stats and charts update automatically from real reports.</p></div>
     </div>
   </div>
   <div class="section">
     <div class="section-title">🛠️ Tech Stack</div>
-    <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
-      <div class="feature-card" style="text-align:center;"><div class="feature-icon">🌍</div><h3>Leaflet.js</h3><p>Interactive Maps</p></div>
-      <div class="feature-card" style="text-align:center;"><div class="feature-icon">📍</div><h3>Geolocation API</h3><p>Real GPS</p></div>
-      <div class="feature-card" style="text-align:center;"><div class="feature-icon">💾</div><h3>LocalStorage</h3><p>Data Persistence</p></div>
-      <div class="feature-card" style="text-align:center;"><div class="feature-icon">📷</div><h3>MediaDevices API</h3><p>Camera Access</p></div>
-      <div class="feature-card" style="text-align:center;"><div class="feature-icon">🗺️</div><h3>OpenStreetMap</h3><p>Free Map Tiles</p></div>
-      <div class="feature-card" style="text-align:center;"><div class="feature-icon">🔥</div><h3>Heatmap Layer</h3><p>Density Viz</p></div>
+    <div class="features-grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">🌍</div><h3>Leaflet.js</h3><p>Interactive Maps</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">📍</div><h3>Geolocation API</h3><p>Real GPS</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">💾</div><h3>LocalStorage</h3><p>Data Persistence</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">📷</div><h3>MediaDevices API</h3><p>Camera Access</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">🗺️</div><h3>OpenStreetMap</h3><p>Free Map Tiles</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">🔥</div><h3>Heatmap Layer</h3><p>Density Viz</p></div>
     </div>
   </div>
   <div class="team-footer">
@@ -255,84 +231,84 @@
   </div>
 </div>
 
-<!-- ==================== REPORT ==================== -->
+<!-- REPORT -->
 <div class="page" id="page-report">
   <div class="report-container">
     <div class="phone-frame">
       <div class="phone-notch"></div>
       <div class="report-header"><h2>⚠️ Report a Hazard</h2><p>Your report helps make roads safer</p></div>
-
       <div class="form-group">
         <div class="form-label">Hazard Type</div>
         <div class="hazard-types" id="hazardTypes">
-          <div class="hazard-option" data-type="Pothole" onclick="selectHazard(this)"><span class="icon">🕳️</span>Pothole</div>
-          <div class="hazard-option" data-type="Waterlogging" onclick="selectHazard(this)"><span class="icon">🌊</span>Waterlogging</div>
-          <div class="hazard-option" data-type="Accident Spot" onclick="selectHazard(this)"><span class="icon">⚠️</span>Accident Spot</div>
+          <div class="hazard-option" data-type="Pothole"><span class="icon">🕳️</span>Pothole</div>
+          <div class="hazard-option" data-type="Waterlogging"><span class="icon">🌊</span>Waterlogging</div>
+          <div class="hazard-option" data-type="Accident Spot"><span class="icon">⚠️</span>Accident Spot</div>
         </div>
       </div>
-
+      <div class="form-group">
+        <div class="form-label">Severity Level</div>
+        <input type="range" min="1" max="5" value="3" class="severity-slider" id="severitySlider">
+        <div class="severity-labels"><span>Low</span><span>Medium</span><span>High</span><span>Critical</span><span>Extreme</span></div>
+        <div style="text-align:center"><span class="severity-value" id="severityDisplay" style="background:#f9731625;color:#f97316">⚡ Medium</span></div>
+      </div>
       <div class="gps-bar" id="gpsBar">
         <div class="gps-dot loading" id="gpsDot"></div>
         <div>
-          <div class="gps-text" id="gpsStatus">📡 Fetching your location...</div>
+          <div class="gps-text" id="gpsStatus">📡 Tap to fetch location...</div>
           <div class="gps-coords" id="gpsCoords">Waiting for GPS...</div>
         </div>
       </div>
-
+      <div id="reportMiniMap"></div>
       <div class="form-group">
         <div class="form-label">Description (Optional)</div>
         <textarea class="form-input" id="reportDesc" rows="2" placeholder="e.g., Large pothole near bus stop..."></textarea>
       </div>
-
       <div class="form-group">
         <div class="form-label">📸 Attach Photo Evidence</div>
         <div class="photo-upload-area" id="photoArea">
-          <div class="photo-trigger" id="photoTrigger" onclick="togglePhotoOptions()">
-            <div class="cam-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            </div>
+          <div class="photo-trigger" id="photoTrigger">
+            <div class="cam-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
             <div class="cam-text">Tap to Add Photo</div>
             <div class="cam-sub">Camera capture or upload from gallery</div>
           </div>
           <div class="photo-options" id="photoOptions">
-            <div class="photo-option-btn" onclick="document.getElementById('cameraInput').click()">
-              <div class="opt-icon" style="background:#3b82f620;">📷</div>
+            <div class="photo-option-btn" id="btnCamera">
+              <div class="opt-icon" style="background:#3b82f620">📷</div>
               <div class="opt-text"><h4>Open Camera</h4><p>Take a live photo of the hazard</p></div>
             </div>
-            <div class="photo-option-btn" onclick="document.getElementById('galleryInput').click()">
-              <div class="opt-icon" style="background:#8b5cf620;">🖼️</div>
-              <div class="opt-text"><h4>Choose from Gallery</h4><p>Select an existing photo from device</p></div>
+            <div class="photo-option-btn" id="btnGallery">
+              <div class="opt-icon" style="background:#8b5cf620">🖼️</div>
+              <div class="opt-text"><h4>Choose from Gallery</h4><p>Select an existing photo</p></div>
             </div>
-            <div class="photo-option-btn" onclick="document.getElementById('fileInput').click()">
-              <div class="opt-icon" style="background:#22c55e20;">📁</div>
-              <div class="opt-text"><h4>Browse Files</h4><p>Upload any image file from storage</p></div>
+            <div class="photo-option-btn" id="btnFile">
+              <div class="opt-icon" style="background:#22c55e20">📁</div>
+              <div class="opt-text"><h4>Browse Files</h4><p>Upload any image file</p></div>
             </div>
           </div>
           <div class="photo-preview" id="photoPreview">
             <img id="previewImg" src="" alt="Preview">
             <div class="preview-info">✓ Photo attached successfully</div>
-            <button class="remove-btn" onclick="removePhoto()">✕ Remove Photo</button>
+            <button class="remove-btn" id="removePhotoBtn">✕ Remove Photo</button>
           </div>
         </div>
-        <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(this)">
-        <input type="file" id="galleryInput" accept="image/*" style="display:none" onchange="handlePhoto(this)">
-        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="handlePhoto(this)">
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+        <input type="file" id="galleryInput" accept="image/*" style="display:none">
+        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" style="display:none">
       </div>
-
-      <div style="background:#0f172a; border:1px solid #334155; border-radius:10px; padding:8px 14px; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
-        <span style="font-size:14px;">🕐</span>
-        <span style="font-size:11px; color:#94a3b8;">Timestamp:</span>
-        <span style="font-size:12px; font-family:monospace;" id="timestamp"></span>
+      <div style="background:#0f172a;border:1px solid #334155;border-radius:10px;padding:8px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:14px">🕐</span>
+        <span style="font-size:11px;color:#94a3b8">Timestamp:</span>
+        <span style="font-size:12px;font-family:monospace" id="timestamp"></span>
       </div>
-
-      <button class="submit-btn" id="submitBtn" onclick="submitReport()">🚀 Submit Report</button>
+      <button class="submit-btn" id="submitBtn">🚀 Submit Report</button>
       <div class="toast" id="toast"></div>
-
-      <!-- Saved Reports List -->
-      <div style="margin-top:24px; border-top:1px solid #334155; padding-top:16px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <div class="form-label" style="margin:0;">📋 Your Saved Reports</div>
-          <button class="clear-btn" onclick="clearReports()" id="clearBtn" style="display:none;">🗑️ Clear All</button>
+      <div style="margin-top:24px;border-top:1px solid #334155;padding-top:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="form-label" style="margin:0">📋 Your Saved Reports (<span id="reportCount">0</span>)</div>
+          <div class="btn-row">
+            <button class="export-btn" id="exportBtn" style="display:none">📤 Export</button>
+            <button class="clear-btn" id="clearBtn" style="display:none">🗑️ Clear</button>
+          </div>
         </div>
         <div id="reportList"></div>
       </div>
@@ -340,7 +316,7 @@
   </div>
 </div>
 
-<!-- ==================== HEATMAP ==================== -->
+<!-- HEATMAP -->
 <div class="page" id="page-heatmap">
   <div class="map-page-container">
     <h2>🗺️ Live Hazard Heatmap</h2>
@@ -348,37 +324,40 @@
       <div class="map-toolbar">
         <h3>Real-Time Reports Map</h3>
         <div class="map-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>Pothole</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;"></div>Waterlogging</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div>Accident</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Pothole</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Waterlogging</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>Accident</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>You</div>
         </div>
       </div>
       <div id="heatmap"></div>
+      <div class="map-stats">
+        <div class="map-stat-item">📍 Reports: <strong id="mapReportCount">0</strong></div>
+        <div class="map-stat-item">🔥 Zones: <strong id="mapZoneCount">0</strong></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ==================== ROUTE ==================== -->
+<!-- ROUTE -->
 <div class="page" id="page-route">
   <div class="map-page-container">
     <h2>🛣️ Safe Route Planner</h2>
     <div class="route-panel">
       <div class="route-sidebar">
         <h3>Plan Your Route</h3>
-        <div class="route-input-group">
-          <label>From</label>
-          <input class="route-input" id="routeFrom" value="📍 My Current Location" readonly>
-        </div>
-        <div class="route-input-group">
-          <label>To</label>
-          <input class="route-input" id="routeTo" placeholder="Enter destination...">
-        </div>
-        <button class="route-btn" onclick="calculateRoute()">🔍 Find Safe Route</button>
-        <div class="route-info" id="routeInfo">
+        <div class="route-input-group"><label>From</label><input class="route-input" id="routeFrom" value="📍 My Current Location" readonly></div>
+        <div class="route-input-group"><label>To</label><input class="route-input" id="routeTo" placeholder="Enter destination..."></div>
+        <button class="route-btn" id="routeBtn">🔍 Find Safe Route</button>
+        <div style="margin-top:12px">
           <div class="route-option recommended">
-            <h4><span style="color:#22c55e;">Safe Route</span><span class="route-tag tag-safe">✓ RECOMMENDED</span></h4>
+            <h4><span style="color:#22c55e">Safe Route</span><span class="route-tag tag-safe">✓ RECOMMENDED</span></h4>
             <p>Avoids all reported hazard zones</p>
-            <p style="color:#22c55e; font-size:10px; margin-top:4px;">Route calculated based on your reports</p>
+            <p style="color:#22c55e;font-size:10px;margin-top:4px" id="routeHazardInfo">0 hazard zones detected</p>
+          </div>
+          <div class="route-option">
+            <h4><span>Direct Route</span><span class="route-tag tag-risky">⚠ RISKY</span></h4>
+            <p>Shortest path — may pass through hazard zones</p>
           </div>
         </div>
       </div>
@@ -387,7 +366,7 @@
   </div>
 </div>
 
-<!-- ==================== CIVIC DASHBOARD ==================== -->
+<!-- CIVIC DASHBOARD -->
 <div class="page" id="page-civic">
   <div class="civic-container">
     <div class="civic-header">
@@ -401,377 +380,416 @@
       <div class="civic-stat"><div class="label">Accident Spots</div><div class="value green" id="civic-accident">0</div></div>
     </div>
     <div class="civic-table">
-      <div class="civic-table-header"><h3>📋 All Hazard Reports</h3></div>
+      <div class="civic-table-header"><h3>📊 Reports by Type</h3></div>
+      <div class="bar-chart" id="barChart">
+        <div class="bar-col"><div class="bar-value" id="bar-val-1" style="color:#ef4444">0</div><div class="bar" id="bar-1" style="height:10px;background:linear-gradient(to top,#ef4444,#f97316)"></div><div class="bar-label">Potholes</div></div>
+        <div class="bar-col"><div class="bar-value" id="bar-val-2" style="color:#3b82f6">0</div><div class="bar" id="bar-2" style="height:10px;background:linear-gradient(to top,#3b82f6,#22c55e)"></div><div class="bar-label">Waterlogging</div></div>
+        <div class="bar-col"><div class="bar-value" id="bar-val-3" style="color:#f97316">0</div><div class="bar" id="bar-3" style="height:10px;background:linear-gradient(to top,#f97316,#eab308)"></div><div class="bar-label">Accidents</div></div>
+      </div>
+    </div>
+    <div class="civic-table">
+      <div class="civic-table-header">
+        <h3>📋 All Hazard Reports</h3>
+        <button class="export-btn" id="civicExportBtn">📤 Export CSV</button>
+      </div>
       <div class="table-scroll">
         <table>
-          <thead><tr><th>#</th><th>Type</th><th>Location</th><th>Time</th><th>Description</th></tr></thead>
+          <thead><tr><th>#</th><th>Type</th><th>Severity</th><th>Location</th><th>Time</th><th>Description</th></tr></thead>
           <tbody id="civicTableBody">
-            <tr><td colspan="5" style="text-align:center; color:#64748b; padding:24px;">No reports yet. Go to Report tab to add hazards!</td></tr>
+            <tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px">No reports yet. Go to Report tab to add hazards!</td></tr>
           </tbody>
         </table>
       </div>
     </div>
     <div class="civic-table">
       <div class="civic-table-header"><h3>🔬 DBSCAN Verification Engine</h3></div>
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; padding:16px;">
-        <div style="background:#0f172a; border-radius:8px; padding:14px; text-align:center;">
-          <div style="font-size:22px; font-weight:700; color:#f97316; font-family:monospace;">500m</div>
-          <div style="font-size:10px; color:#94a3b8; margin-top:4px;">Cluster Radius (ε)</div>
-        </div>
-        <div style="background:#0f172a; border-radius:8px; padding:14px; text-align:center;">
-          <div style="font-size:22px; font-weight:700; color:#f97316; font-family:monospace;">3+</div>
-          <div style="font-size:10px; color:#94a3b8; margin-top:4px;">Min Reports</div>
-        </div>
-        <div style="background:#0f172a; border-radius:8px; padding:14px; text-align:center;">
-          <div style="font-size:22px; font-weight:700; color:#f97316; font-family:monospace;">48h</div>
-          <div style="font-size:10px; color:#94a3b8; margin-top:4px;">Time Window</div>
-        </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px">
+        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">500m</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Cluster Radius (ε)</div></div>
+        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">3+</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Min Reports</div></div>
+        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">48h</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Time Window</div></div>
       </div>
+      <p style="font-size:11px;color:#64748b;padding:0 16px 16px;text-align:center">Hotspot confirmed after 3+ distinct users report within 500m in 48 hours.</p>
     </div>
   </div>
 </div>
 
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 <script>
-// ==================== STATE ====================
-let currentLat = null;
-let currentLng = null;
-let selectedHazard = null;
-let photoData = null;
-let heatmapObj = null;
-let routemapObj = null;
-let reports = JSON.parse(localStorage.getItem('roadguard_reports') || '[]');
+(function(){
+  // ===== STATE =====
+  var currentLat = null, currentLng = null, selectedHazard = null, photoData = null;
+  var heatmapObj = null, routemapObj = null, miniMapObj = null, miniMarker = null;
+  var reports = [];
+  try { reports = JSON.parse(localStorage.getItem('roadguard_reports') || '[]'); } catch(e) { reports = []; }
 
-// ==================== NAVIGATION ====================
-function showPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  // ===== NAVIGATION =====
+  var navBtns = document.querySelectorAll('.nav-links button');
+  navBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var page = this.getAttribute('data-page');
+      document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+      document.getElementById('page-' + page).classList.add('active');
+      navBtns.forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      onPageShow(page);
+    });
+  });
 
-  if (page === 'heatmap') setTimeout(initHeatmap, 100);
-  if (page === 'route') setTimeout(initRouteMap, 100);
-  if (page === 'home') updateHomeStats();
-  if (page === 'civic') updateCivicDashboard();
-  if (page === 'report') { getLocation(); updateReportList(); updateTimestamp(); }
-}
+  // Hero button
+  document.getElementById('heroReportBtn').addEventListener('click', function() {
+    navBtns.forEach(function(b) { b.classList.remove('active'); });
+    navBtns[1].classList.add('active');
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    document.getElementById('page-report').classList.add('active');
+    onPageShow('report');
+  });
 
-// ==================== GPS LOCATION ====================
-function getLocation() {
-  var dot = document.getElementById('gpsDot');
-  var status = document.getElementById('gpsStatus');
-  var coords = document.getElementById('gpsCoords');
-  dot.className = 'gps-dot loading';
-  status.textContent = '📡 Fetching your location...';
-  coords.textContent = 'Waiting for GPS...';
+  function onPageShow(page) {
+    if (page === 'heatmap') setTimeout(initHeatmap, 150);
+    if (page === 'route') setTimeout(initRouteMap, 150);
+    if (page === 'home') updateHomeStats();
+    if (page === 'civic') updateCivicDashboard();
+    if (page === 'report') { getLocation(); updateReportList(); updateTimestamp(); setTimeout(initMiniMap, 200); }
+  }
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function(pos) {
+  // ===== GPS =====
+  function getLocation() {
+    var dot = document.getElementById('gpsDot');
+    var status = document.getElementById('gpsStatus');
+    var coords = document.getElementById('gpsCoords');
+    dot.className = 'gps-dot loading';
+    status.textContent = '📡 Fetching your location...';
+    coords.textContent = 'Waiting for GPS...';
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(pos) {
         currentLat = pos.coords.latitude;
         currentLng = pos.coords.longitude;
         dot.className = 'gps-dot active';
         status.textContent = '✅ GPS Location Captured';
         coords.textContent = currentLat.toFixed(6) + '° N, ' + currentLng.toFixed(6) + '° E';
-      },
-      function(err) {
+        updateMiniMap();
+      }, function() {
         dot.className = 'gps-dot error';
-        status.textContent = '❌ Location access denied';
-        coords.textContent = 'Using default: Coimbatore';
-        currentLat = 11.0168;
-        currentLng = 76.9558;
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  } else {
-    dot.className = 'gps-dot error';
-    status.textContent = '❌ GPS not supported';
-    coords.textContent = 'Using default: Coimbatore';
-    currentLat = 11.0168;
-    currentLng = 76.9558;
-  }
-}
-
-// ==================== HAZARD SELECTION ====================
-function selectHazard(el) {
-  document.querySelectorAll('.hazard-option').forEach(function(o) { o.classList.remove('selected'); });
-  el.classList.add('selected');
-  selectedHazard = el.getAttribute('data-type');
-}
-
-// ==================== PHOTO HANDLING ====================
-function togglePhotoOptions() {
-  var opts = document.getElementById('photoOptions');
-  opts.classList.toggle('show');
-}
-
-function handlePhoto(input) {
-  if (input.files && input.files[0]) {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      photoData = e.target.result;
-      document.getElementById('previewImg').src = photoData;
-      document.getElementById('photoPreview').classList.add('show');
-      document.getElementById('photoTrigger').style.display = 'none';
-      document.getElementById('photoOptions').classList.remove('show');
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-}
-
-function removePhoto() {
-  photoData = null;
-  document.getElementById('photoPreview').classList.remove('show');
-  document.getElementById('photoTrigger').style.display = 'flex';
-  document.getElementById('cameraInput').value = '';
-  document.getElementById('galleryInput').value = '';
-  document.getElementById('fileInput').value = '';
-}
-
-// ==================== TIMESTAMP ====================
-function updateTimestamp() {
-  var now = new Date();
-  document.getElementById('timestamp').textContent = now.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-}
-
-// ==================== SUBMIT REPORT ====================
-function submitReport() {
-  var toast = document.getElementById('toast');
-
-  if (!selectedHazard) {
-    toast.className = 'toast error';
-    toast.textContent = '❌ Please select a hazard type!';
-    setTimeout(function() { toast.className = 'toast'; }, 3000);
-    return;
+        status.textContent = '⚠️ Using default (tap to retry)';
+        coords.textContent = '11.0168° N, 76.9558° E (Coimbatore)';
+        currentLat = 11.0168; currentLng = 76.9558;
+        updateMiniMap();
+      }, { enableHighAccuracy: true, timeout: 10000 });
+    } else {
+      dot.className = 'gps-dot error';
+      status.textContent = '❌ GPS not supported';
+      coords.textContent = '11.0168° N, 76.9558° E';
+      currentLat = 11.0168; currentLng = 76.9558;
+      updateMiniMap();
+    }
   }
 
-  if (!currentLat || !currentLng) {
-    toast.className = 'toast error';
-    toast.textContent = '❌ Waiting for GPS location...';
-    setTimeout(function() { toast.className = 'toast'; }, 3000);
-    return;
+  document.getElementById('gpsBar').addEventListener('click', getLocation);
+
+  // ===== MINI MAP =====
+  function initMiniMap() {
+    if (miniMapObj) { miniMapObj.remove(); miniMapObj = null; }
+    var lat = currentLat || 11.0168, lng = currentLng || 76.9558;
+    miniMapObj = L.map('reportMiniMap', { zoomControl: false, attributionControl: false }).setView([lat, lng], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(miniMapObj);
+    miniMarker = L.marker([lat, lng]).addTo(miniMapObj).bindPopup('📍 Report Location');
+    setTimeout(function() { miniMapObj.invalidateSize(); }, 100);
   }
 
-  var report = {
-    id: Date.now(),
-    type: selectedHazard,
-    lat: currentLat,
-    lng: currentLng,
-    description: document.getElementById('reportDesc').value,
-    photo: photoData,
-    timestamp: new Date().toISOString(),
-    displayTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-  };
+  function updateMiniMap() {
+    if (miniMapObj && currentLat && currentLng) {
+      miniMapObj.setView([currentLat, currentLng], 15);
+      if (miniMarker) miniMarker.setLatLng([currentLat, currentLng]);
+    }
+  }
 
-  reports.push(report);
-  saveReports();
+  // ===== SEVERITY =====
+  var severitySlider = document.getElementById('severitySlider');
+  severitySlider.addEventListener('input', updateSeverity);
+  function updateSeverity() {
+    var val = severitySlider.value;
+    var display = document.getElementById('severityDisplay');
+    var levels = ['🟢 Low', '🟡 Moderate', '⚡ Medium', '🔴 High', '💀 Critical'];
+    var colors = ['#22c55e', '#eab308', '#f97316', '#ef4444', '#dc2626'];
+    display.textContent = levels[val - 1];
+    display.style.color = colors[val - 1];
+    display.style.background = colors[val - 1] + '25';
+  }
 
-  // Reset form
-  selectedHazard = null;
-  photoData = null;
-  document.querySelectorAll('.hazard-option').forEach(function(o) { o.classList.remove('selected'); });
-  document.getElementById('reportDesc').value = '';
-  removePhoto();
+  // ===== HAZARD SELECTION =====
+  document.querySelectorAll('.hazard-option').forEach(function(el) {
+    el.addEventListener('click', function() {
+      document.querySelectorAll('.hazard-option').forEach(function(o) { o.classList.remove('selected'); });
+      this.classList.add('selected');
+      selectedHazard = this.getAttribute('data-type');
+    });
+  });
 
-  toast.className = 'toast success';
-  toast.textContent = '✅ Report saved! View it on the Heatmap 🗺️';
-  setTimeout(function() { toast.className = 'toast'; }, 4000);
+  // ===== PHOTO =====
+  document.getElementById('photoTrigger').addEventListener('click', function() {
+    document.getElementById('photoOptions').classList.toggle('show');
+  });
+  document.getElementById('btnCamera').addEventListener('click', function() { document.getElementById('cameraInput').click(); });
+  document.getElementById('btnGallery').addEventListener('click', function() { document.getElementById('galleryInput').click(); });
+  document.getElementById('btnFile').addEventListener('click', function() { document.getElementById('fileInput').click(); });
 
-  updateReportList();
+  function handlePhoto(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        photoData = e.target.result;
+        document.getElementById('previewImg').src = photoData;
+        document.getElementById('photoPreview').classList.add('show');
+        document.getElementById('photoTrigger').style.display = 'none';
+        document.getElementById('photoOptions').classList.remove('show');
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  document.getElementById('cameraInput').addEventListener('change', function() { handlePhoto(this); });
+  document.getElementById('galleryInput').addEventListener('change', function() { handlePhoto(this); });
+  document.getElementById('fileInput').addEventListener('change', function() { handlePhoto(this); });
+
+  function removePhoto() {
+    photoData = null;
+    document.getElementById('photoPreview').classList.remove('show');
+    document.getElementById('photoTrigger').style.display = 'flex';
+    document.getElementById('cameraInput').value = '';
+    document.getElementById('galleryInput').value = '';
+    document.getElementById('fileInput').value = '';
+  }
+  document.getElementById('removePhotoBtn').addEventListener('click', removePhoto);
+
+  // ===== TIMESTAMP =====
+  function updateTimestamp() {
+    document.getElementById('timestamp').textContent = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+  }
+  setInterval(updateTimestamp, 1000);
   updateTimestamp();
-}
 
-function saveReports() {
-  var toSave = reports.map(function(r) {
-    return { id: r.id, type: r.type, lat: r.lat, lng: r.lng, description: r.description, timestamp: r.timestamp, displayTime: r.displayTime, photo: r.photo ? r.photo.substring(0, 200) + '...' : null };
-  });
-  try {
-    localStorage.setItem('roadguard_reports', JSON.stringify(reports));
-  } catch(e) {
-    var noPhoto = reports.map(function(r) { var c = Object.assign({}, r); c.photo = null; return c; });
-    localStorage.setItem('roadguard_reports', JSON.stringify(noPhoto));
-  }
-}
+  // ===== SUBMIT =====
+  document.getElementById('submitBtn').addEventListener('click', function() {
+    if (!selectedHazard) { showToast('❌ Please select a hazard type!', 'error'); return; }
+    if (!currentLat) { showToast('❌ Waiting for GPS — tap GPS bar to retry', 'error'); return; }
 
-// ==================== REPORT LIST ====================
-function updateReportList() {
-  var list = document.getElementById('reportList');
-  var clearBtn = document.getElementById('clearBtn');
+    var severity = parseInt(severitySlider.value);
+    var severityLabels = ['Low', 'Moderate', 'Medium', 'High', 'Critical'];
 
-  if (reports.length === 0) {
-    list.innerHTML = '<div class="no-reports"><div class="big-icon">📭</div><p>No reports yet. Submit your first hazard report above!</p></div>';
-    clearBtn.style.display = 'none';
-    return;
-  }
+    var report = {
+      id: Date.now(),
+      type: selectedHazard,
+      lat: currentLat + (Math.random() - 0.5) * 0.002,
+      lng: currentLng + (Math.random() - 0.5) * 0.002,
+      severity: severity,
+      severityLabel: severityLabels[severity - 1],
+      description: document.getElementById('reportDesc').value,
+      photo: photoData,
+      timestamp: new Date().toISOString(),
+      displayTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    };
 
-  clearBtn.style.display = 'inline-block';
-  var html = '';
-  var typeIcons = { 'Pothole': '🕳️', 'Waterlogging': '🌊', 'Accident Spot': '⚠️' };
+    reports.push(report);
+    saveReports();
 
-  for (var i = reports.length - 1; i >= 0; i--) {
-    var r = reports[i];
-    html += '<div class="report-item">';
-    html += '<div class="ri-header"><span class="ri-type">' + (typeIcons[r.type] || '📍') + ' ' + r.type + '</span><span class="ri-time">' + r.displayTime + '</span></div>';
-    html += '<div class="ri-coords">📍 ' + r.lat.toFixed(6) + '°N, ' + r.lng.toFixed(6) + '°E</div>';
-    if (r.description) html += '<div class="ri-desc">' + r.description + '</div>';
-    if (r.photo && r.photo.length > 210) html += '<img class="ri-photo" src="' + r.photo + '" alt="Hazard photo">';
-    html += '<button class="delete-btn" onclick="deleteReport(' + r.id + ')">🗑️ Delete</button>';
-    html += '</div>';
-  }
-  list.innerHTML = html;
-}
+    // Reset form
+    selectedHazard = null;
+    photoData = null;
+    document.querySelectorAll('.hazard-option').forEach(function(o) { o.classList.remove('selected'); });
+    document.getElementById('reportDesc').value = '';
+    severitySlider.value = 3;
+    updateSeverity();
+    removePhoto();
 
-function deleteReport(id) {
-  reports = reports.filter(function(r) { return r.id !== id; });
-  saveReports();
-  updateReportList();
-}
-
-function clearReports() {
-  if (confirm('Delete all reports? This cannot be undone.')) {
-    reports = [];
-    localStorage.removeItem('roadguard_reports');
+    showToast('✅ Report #' + reports.length + ' saved! View on Heatmap 🗺️', 'success');
     updateReportList();
-  }
-}
-
-// ==================== HOME STATS ====================
-function updateHomeStats() {
-  document.getElementById('stat-reports').textContent = reports.length;
-  var zones = new Set();
-  var potholes = 0;
-  var waterlog = 0;
-  reports.forEach(function(r) {
-    zones.add(Math.round(r.lat * 100) + ',' + Math.round(r.lng * 100));
-    if (r.type === 'Pothole') potholes++;
-    if (r.type === 'Waterlogging') waterlog++;
-  });
-  document.getElementById('stat-hotspots').textContent = zones.size;
-  document.getElementById('stat-potholes').textContent = potholes;
-  document.getElementById('stat-waterlog').textContent = waterlog;
-}
-
-// ==================== HEATMAP ====================
-function initHeatmap() {
-  var container = document.getElementById('heatmap');
-  if (heatmapObj) { heatmapObj.remove(); heatmapObj = null; }
-
-  var centerLat = currentLat || 11.0168;
-  var centerLng = currentLng || 76.9558;
-
-  heatmapObj = L.map('heatmap').setView([centerLat, centerLng], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 19
-  }).addTo(heatmapObj);
-
-  // Add user location marker
-  if (currentLat && currentLng) {
-    L.circleMarker([currentLat, currentLng], { radius: 10, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.8 })
-      .addTo(heatmapObj).bindPopup('📍 You are here');
-  }
-
-  var typeColors = { 'Pothole': '#ef4444', 'Waterlogging': '#3b82f6', 'Accident Spot': '#f97316' };
-  var typeIcons = { 'Pothole': '🕳️', 'Waterlogging': '🌊', 'Accident Spot': '⚠️' };
-  var heatPoints = [];
-
-  reports.forEach(function(r) {
-    var color = typeColors[r.type] || '#f97316';
-    L.circleMarker([r.lat, r.lng], { radius: 8, color: color, fillColor: color, fillOpacity: 0.7 })
-      .addTo(heatmapObj)
-      .bindPopup('<b>' + typeIcons[r.type] + ' ' + r.type + '</b><br>📍 ' + r.lat.toFixed(4) + ', ' + r.lng.toFixed(4) + '<br>🕐 ' + r.displayTime + (r.description ? '<br>📝 ' + r.description : ''));
-    heatPoints.push([r.lat, r.lng, 0.8]);
   });
 
-  if (heatPoints.length > 0) {
-    L.heatLayer(heatPoints, { radius: 35, blur: 25, maxZoom: 17, gradient: { 0.2: '#3b82f6', 0.4: '#eab308', 0.6: '#f97316', 0.8: '#ef4444', 1: '#dc2626' } }).addTo(heatmapObj);
+  function showToast(msg, type) {
+    var toast = document.getElementById('toast');
+    toast.className = 'toast ' + type;
+    toast.textContent = msg;
+    setTimeout(function() { toast.className = 'toast'; }, 4000);
   }
 
-  if (reports.length === 0) {
-    L.popup().setLatLng([centerLat, centerLng]).setContent('📭 No reports yet!<br>Go to Report tab to add hazards.').openOn(heatmapObj);
+  function saveReports() {
+    try {
+      var toSave = reports.map(function(r) {
+        var c = {}; for (var k in r) c[k] = r[k];
+        if (c.photo && c.photo.length > 50000) c.photo = c.photo.substring(0, 50000);
+        return c;
+      });
+      localStorage.setItem('roadguard_reports', JSON.stringify(toSave));
+    } catch(e) {
+      var noPhoto = reports.map(function(r) { var c = {}; for (var k in r) c[k] = r[k]; c.photo = null; return c; });
+      localStorage.setItem('roadguard_reports', JSON.stringify(noPhoto));
+    }
   }
 
-  setTimeout(function() { heatmapObj.invalidateSize(); }, 200);
-}
+  // ===== REPORT LIST =====
+  function updateReportList() {
+    var list = document.getElementById('reportList');
+    var clearBtn = document.getElementById('clearBtn');
+    var exportBtn = document.getElementById('exportBtn');
+    document.getElementById('reportCount').textContent = reports.length;
 
-// ==================== ROUTE MAP ====================
-function initRouteMap() {
-  var container = document.getElementById('routemap');
-  if (routemapObj) { routemapObj.remove(); routemapObj = null; }
+    if (reports.length === 0) {
+      list.innerHTML = '<div class="no-reports"><div class="big-icon">📭</div><p>No reports yet. Submit your first hazard report above!</p></div>';
+      clearBtn.style.display = 'none';
+      exportBtn.style.display = 'none';
+      return;
+    }
 
-  var centerLat = currentLat || 11.0168;
-  var centerLng = currentLng || 76.9558;
-
-  routemapObj = L.map('routemap').setView([centerLat, centerLng], 14);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 19
-  }).addTo(routemapObj);
-
-  if (currentLat && currentLng) {
-    L.marker([currentLat, currentLng]).addTo(routemapObj).bindPopup('📍 Your Location').openPopup();
-  }
-
-  // Show hazard zones to avoid
-  reports.forEach(function(r) {
-    L.circle([r.lat, r.lng], { radius: 200, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.15, weight: 1 }).addTo(routemapObj);
-    L.circleMarker([r.lat, r.lng], { radius: 6, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.8 }).addTo(routemapObj).bindPopup('⚠️ ' + r.type + ' — Avoid this zone!');
-  });
-
-  setTimeout(function() { routemapObj.invalidateSize(); }, 200);
-}
-
-function calculateRoute() {
-  var dest = document.getElementById('routeTo').value;
-  if (!dest) {
-    alert('Please enter a destination!');
-    return;
-  }
-  alert('🛣️ Safe Route calculated!\n\nAvoiding ' + reports.length + ' hazard zone(s).\n\n💡 In the full version, this would use OSRM routing API to calculate the actual safest path.');
-}
-
-// ==================== CIVIC DASHBOARD ====================
-function updateCivicDashboard() {
-  document.getElementById('civic-total').textContent = reports.length;
-  var potholes = 0, water = 0, accident = 0;
-  reports.forEach(function(r) {
-    if (r.type === 'Pothole') potholes++;
-    if (r.type === 'Waterlogging') water++;
-    if (r.type === 'Accident Spot') accident++;
-  });
-  document.getElementById('civic-potholes').textContent = potholes;
-  document.getElementById('civic-water').textContent = water;
-  document.getElementById('civic-accident').textContent = accident;
-
-  var tbody = document.getElementById('civicTableBody');
-  if (reports.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#64748b; padding:24px;">No reports yet. Go to Report tab to add hazards!</td></tr>';
-    return;
-  }
-
-  var html = '';
-  for (var i = reports.length - 1; i >= 0; i--) {
-    var r = reports[i];
+    clearBtn.style.display = 'inline-block';
+    exportBtn.style.display = 'inline-block';
     var typeIcons = { 'Pothole': '🕳️', 'Waterlogging': '🌊', 'Accident Spot': '⚠️' };
-    var priorityClass = r.type === 'Pothole' ? 'priority-critical' : r.type === 'Waterlogging' ? 'priority-medium' : 'priority-high';
-    html += '<tr>';
-    html += '<td style="font-weight:700; color:#f97316;">#' + (reports.length - i) + '</td>';
-    html += '<td>' + (typeIcons[r.type] || '') + ' ' + r.type + '</td>';
-    html += '<td style="font-family:monospace; font-size:10px;">' + r.lat.toFixed(4) + ', ' + r.lng.toFixed(4) + '</td>';
-    html += '<td style="font-size:10px;">' + r.displayTime + '</td>';
-    html += '<td style="font-size:10px; color:#94a3b8;">' + (r.description || '—') + '</td>';
-    html += '</tr>';
+    var sevColors = { 'Low': '#22c55e', 'Moderate': '#eab308', 'Medium': '#f97316', 'High': '#ef4444', 'Critical': '#dc2626' };
+    var html = '';
+
+    for (var i = reports.length - 1; i >= 0; i--) {
+      var r = reports[i];
+      var sc = sevColors[r.severityLabel] || '#f97316';
+      html += '<div class="report-item">';
+      html += '<div class="ri-header"><span class="ri-type">' + (typeIcons[r.type] || '📍') + ' ' + r.type + '</span><span class="ri-time">' + r.displayTime + '</span></div>';
+      html += '<div class="ri-coords">📍 ' + r.lat.toFixed(6) + '°N, ' + r.lng.toFixed(6) + '°E</div>';
+      if (r.severityLabel) html += '<span class="ri-severity" style="background:' + sc + '20;color:' + sc + '">' + r.severityLabel + '</span>';
+      if (r.description) html += '<div class="ri-desc">📝 ' + r.description + '</div>';
+      if (r.photo && r.photo.length > 100) html += '<img class="ri-photo" src="' + r.photo + '" alt="Photo">';
+      html += '<button class="delete-btn" data-id="' + r.id + '">🗑️ Delete</button>';
+      html += '</div>';
+    }
+    list.innerHTML = html;
+
+    // Attach delete handlers
+    list.querySelectorAll('.delete-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id = parseInt(this.getAttribute('data-id'));
+        reports = reports.filter(function(r) { return r.id !== id; });
+        saveReports();
+        updateReportList();
+      });
+    });
   }
-  tbody.innerHTML = html;
-}
 
-// ==================== INIT ====================
-updateHomeStats();
-updateTimestamp();
-setInterval(updateTimestamp, 1000);
-</script>
-</body>
-</html>
+  document.getElementById('clearBtn').addEventListener('click', function() {
+    if (confirm('Delete all reports? This cannot be undone.')) {
+      reports = [];
+      localStorage.removeItem('roadguard_reports');
+      updateReportList();
+    }
+  });
 
+  function exportReports() {
+    if (reports.length === 0) { alert('No reports to export!'); return; }
+    var csv = 'ID,Type,Severity,Latitude,Longitude,Description,Timestamp\n';
+    reports.forEach(function(r) {
+      csv += r.id + ',' + r.type + ',' + (r.severityLabel || 'N/A') + ',' + r.lat.toFixed(6) + ',' + r.lng.toFixed(6) + ',"' + (r.description || '') + '",' + r.displayTime + '\n';
+    });
+    var blob = new Blob([csv], { type: 'text/csv' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'roadguard_reports.csv';
+    a.click();
+  }
+  document.getElementById('exportBtn').addEventListener('click', exportReports);
+  document.getElementById('civicExportBtn').addEventListener('click', exportReports);
+
+  // ===== HOME STATS =====
+  function updateHomeStats() {
+    document.getElementById('stat-reports').textContent = reports.length;
+    var zones = {}, potholes = 0, waterlog = 0;
+    reports.forEach(function(r) {
+      zones[Math.round(r.lat * 100) + ',' + Math.round(r.lng * 100)] = true;
+      if (r.type === 'Pothole') potholes++;
+      if (r.type === 'Waterlogging') waterlog++;
+    });
+    document.getElementById('stat-hotspots').textContent = Object.keys(zones).length;
+    document.getElementById('stat-potholes').textContent = potholes;
+    document.getElementById('stat-waterlog').textContent = waterlog;
+  }
+
+  // ===== HEATMAP =====
+  function initHeatmap() {
+    if (heatmapObj) { heatmapObj.remove(); heatmapObj = null; }
+    var lat = currentLat || 11.0168, lng = currentLng || 76.9558;
+    heatmapObj = L.map('heatmap').setView([lat, lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(heatmapObj);
+
+    if (currentLat && currentLng) {
+      L.circleMarker([currentLat, currentLng], { radius: 10, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.9, weight: 2 })
+        .addTo(heatmapObj).bindPopup('<b>📍 You are here</b>');
+    }
+
+    var typeColors = { 'Pothole': '#ef4444', 'Waterlogging': '#3b82f6', 'Accident Spot': '#f97316' };
+    var typeIcons = { 'Pothole': '🕳️', 'Waterlogging': '🌊', 'Accident Spot': '⚠️' };
+    var heatPoints = [];
+
+    reports.forEach(function(r) {
+      var color = typeColors[r.type] || '#f97316';
+      L.circleMarker([r.lat, r.lng], { radius: 8, color: color, fillColor: color, fillOpacity: 0.7 })
+        .addTo(heatmapObj)
+        .bindPopup('<b>' + (typeIcons[r.type] || '') + ' ' + r.type + '</b><br>📍 ' + r.lat.toFixed(4) + ', ' + r.lng.toFixed(4) + '<br>⚡ ' + (r.severityLabel || 'N/A') + '<br>🕐 ' + r.displayTime + (r.description ? '<br>📝 ' + r.description : ''));
+      heatPoints.push([r.lat, r.lng, (r.severity || 3) / 5]);
+    });
+
+    if (heatPoints.length > 0) {
+      L.heatLayer(heatPoints, { radius: 35, blur: 25, maxZoom: 17, gradient: { 0.2: '#3b82f6', 0.4: '#eab308', 0.6: '#f97316', 0.8: '#ef4444', 1: '#dc2626' } }).addTo(heatmapObj);
+    }
+
+    if (reports.length === 0) {
+      L.popup().setLatLng([lat, lng]).setContent('📭 No reports yet!<br>Go to Report tab to add hazards.').openOn(heatmapObj);
+    }
+
+    document.getElementById('mapReportCount').textContent = reports.length;
+    var zones = {};
+    reports.forEach(function(r) { zones[Math.round(r.lat * 100) + ',' + Math.round(r.lng * 100)] = true; });
+    document.getElementById('mapZoneCount').textContent = Object.keys(zones).length;
+
+    setTimeout(function() { heatmapObj.invalidateSize(); }, 200);
+  }
+
+  // ===== ROUTE MAP =====
+  function initRouteMap() {
+    if (routemapObj) { routemapObj.remove(); routemapObj = null; }
+    var lat = currentLat || 11.0168, lng = currentLng || 76.9558;
+    routemapObj = L.map('routemap').setView([lat, lng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(routemapObj);
+
+    if (currentLat && currentLng) {
+      L.marker([currentLat, currentLng]).addTo(routemapObj).bindPopup('📍 Your Location').openPopup();
+    }
+
+    reports.forEach(function(r) {
+      L.circle([r.lat, r.lng], { radius: 200, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.15, weight: 1 }).addTo(routemapObj);
+      L.circleMarker([r.lat, r.lng], { radius: 6, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.8 })
+        .addTo(routemapObj).bindPopup('⚠️ ' + r.type + ' — Avoid this zone!');
+    });
+
+    document.getElementById('routeHazardInfo').textContent = reports.length + ' hazard zone(s) detected';
+    setTimeout(function() { routemapObj.invalidateSize(); }, 200);
+  }
+
+  document.getElementById('routeBtn').addEventListener('click', function() {
+    var dest = document.getElementById('routeTo').value;
+    if (!dest) { alert('Please enter a destination!'); return; }
+    alert('🛣️ Safe Route calculated!\n\nAvoiding ' + reports.length + ' hazard zone(s).\n\n💡 In the full version, this uses OSRM routing API for actual safest path.');
+  });
+
+  // ===== CIVIC DASHBOARD =====
+  function updateCivicDashboard() {
+    var potholes = 0, water = 0, accident = 0;
+    reports.forEach(function(r) {
+      if (r.type === 'Pothole') potholes++;
+      if (r.type === 'Waterlogging') water++;
+      if (r.type === 'Accident Spot') accident++;
+    });
+    document.getElementById('civic-total').textContent = reports.length;
+    document.getElementById('civic-potholes').textContent = potholes;
+    document.getElementById('civic-water').textContent = water;
+    document.getElementById('civic-accident').textContent = accident;
+
+    // Bar chart
+    var max = Math.max(potholes, water, accident, 1);
+    document.getElementById('bar-val-1').textContent = potholes;
+    document.getElementById('bar-
