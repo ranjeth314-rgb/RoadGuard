@@ -171,625 +171,100 @@ tr:hover td{background:#ffffff05}
 <body>
 
 <nav class="navbar">
-  <div class="logo">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-    RoadGuard
-  </div>
-  <div class="nav-links" id="navLinks">
-    <button class="active" data-page="home">Home</button>
-    <button data-page="report">Report</button>
-    <button data-page="heatmap">Heatmap</button>
-    <button data-page="route">Safe Route</button>
-    <button data-page="civic">Dashboard</button>
-  </div>
+  <div class="logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    RoadGuard
+  </div>
+  <div class="nav-links" id="navLinks">
+    <button class="active" data-page="home">Home</button>
+    <button data-page="report">Report</button>
+    <button data-page="heatmap">Heatmap</button>
+    <button data-page="route">Safe Route</button>
+    <button data-page="civic">Dashboard</button>
+  </div>
 </nav>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
-  <div class="hero">
-    <div class="hero-badge">🏆 Smart Move Hackathon — Team Spark</div>
-    <h1>Report. Verify. <span>Navigate Safely.</span></h1>
-    <p>A crowd-sourced platform that turns commuter reports into verified hazard hotspots, live heatmaps, and safer routes.</p>
-    <button class="submit-btn" style="width:auto;padding:12px 32px" id="heroReportBtn">⚡ Report a Hazard Now</button>
-  </div>
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-value" id="stat-reports">0</div><div class="stat-label">Reports Filed</div></div>
-    <div class="stat-card"><div class="stat-value" id="stat-hotspots">0</div><div class="stat-label">Hazard Zones</div></div>
-    <div class="stat-card"><div class="stat-value" id="stat-potholes">0</div><div class="stat-label">Potholes</div></div>
-    <div class="stat-card"><div class="stat-value" id="stat-waterlog">0</div><div class="stat-label">Waterlogging</div></div>
-  </div>
-  <div class="section">
-    <div class="section-title">✨ Real Working Features</div>
-    <div class="features-grid">
-      <div class="feature-card"><div class="feature-icon">📍</div><h3>Real GPS Capture</h3><p>Auto-captures your actual GPS coordinates when reporting.</p></div>
-      <div class="feature-card"><div class="feature-icon">📷</div><h3>Photo Evidence</h3><p>Camera capture or gallery upload with live preview.</p></div>
-      <div class="feature-card"><div class="feature-icon">🗺️</div><h3>Live Map</h3><p>Real OpenStreetMap with hazard markers and heat zones.</p></div>
-      <div class="feature-card"><div class="feature-icon">💾</div><h3>Saved Reports</h3><p>All reports saved locally — persists after closing browser.</p></div>
-      <div class="feature-card"><div class="feature-icon">🏛️</div><h3>Live Dashboard</h3><p>Stats and charts update automatically from real reports.</p></div>
-    </div>
-  </div>
-  <div class="section">
-    <div class="section-title">🛠️ Tech Stack</div>
-    <div class="features-grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">🌍</div><h3>Leaflet.js</h3><p>Interactive Maps</p></div>
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">📍</div><h3>Geolocation API</h3><p>Real GPS</p></div>
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">💾</div><h3>LocalStorage</h3><p>Data Persistence</p></div>
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">📷</div><h3>MediaDevices API</h3><p>Camera Access</p></div>
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">🗺️</div><h3>OpenStreetMap</h3><p>Free Map Tiles</p></div>
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">🔥</div><h3>Heatmap Layer</h3><p>Density Viz</p></div>
-    </div>
-  </div>
-  <div class="team-footer">
-    <h3>Team Spark 🔥</h3>
-    <p>SNS College of Technology — SMART MOVE Hackathon @ KIT Coimbatore</p>
-    <div class="team-members">
-      <div class="member">Haris M S</div>
-      <div class="member">Logavinayaga V</div>
-      <div class="member">Srihari V</div>
-      <div class="member">Ranjeth P</div>
-    </div>
-  </div>
+  <div class="hero">
+    <div class="hero-badge">🏆 Smart Move Hackathon — Team Spark</div>
+    <h1>Report. Verify. <span>Navigate Safely.</span></h1>
+    <p>A crowd-sourced platform that turns commuter reports into verified hazard hotspots, live heatmaps, and safer routes.</p>
+    <button class="submit-btn" style="width:auto;padding:12px 32px" id="heroReportBtn">⚡ Report a Hazard Now</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-value" id="stat-reports">0</div><div class="stat-label">Reports Filed</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-hotspots">0</div><div class="stat-label">Hazard Zones</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-potholes">0</div><div class="stat-label">Potholes</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-waterlog">0</div><div class="stat-label">Waterlogging</div></div>
+  </div>
+  <div class="section">
+    <div class="section-title">✨ Real Working Features</div>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon">📍</div><h3>Real GPS Capture</h3><p>Auto-captures your actual GPS coordinates when reporting.</p></div>
+      <div class="feature-card"><div class="feature-icon">📷</div><h3>Photo Evidence</h3><p>Camera capture or gallery upload with live preview.</p></div>
+      <div class="feature-card"><div class="feature-icon">🗺️</div><h3>Live Map</h3><p>Real OpenStreetMap with hazard markers and heat zones.</p></div>
+      <div class="feature-card"><div class="feature-icon">💾</div><h3>Saved Reports</h3><p>All reports saved locally — persists after closing browser.</p></div>
+      <div class="feature-card"><div class="feature-icon">🏛️</div><h3>Live Dashboard</h3><p>Stats and charts update automatically from real reports.</p></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">🛠️ Tech Stack</div>
+    <div class="features-grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">🌍</div><h3>Leaflet.js</h3><p>Interactive Maps</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">📍</div><h3>Geolocation API</h3><p>Real GPS</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">💾</div><h3>LocalStorage</h3><p>Data Persistence</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">📷</div><h3>MediaDevices API</h3><p>Camera Access</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">🗺️</div><h3>OpenStreetMap</h3><p>Free Map Tiles</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">🔥</div><h3>Heatmap Layer</h3><p>Density Viz</p></div>
+    </div>
+  </div>
+  <div class="team-footer">
+    <h3>Team Spark 🔥</h3>
+    <p>SNS College of Technology — SMART MOVE Hackathon @ KIT Coimbatore</p>
+    <div class="team-members">
+      <div class="member">Haris M S</div>
+      <div class="member">Logavinayaga V</div>
+      <div class="member">Srihari V</div>
+      <div class="member">Ranjeth P</div>
+    </div>
+  </div>
 </div>
 
 <!-- REPORT -->
 <div class="page" id="page-report">
-  <div class="report-container">
-    <div class="phone-frame">
-      <div class="phone-notch"></div>
-      <div class="report-header"><h2>⚠️ Report a Hazard</h2><p>Your report helps make roads safer</p></div>
-      <div class="form-group">
-        <div class="form-label">Hazard Type</div>
-        <div class="hazard-types" id="hazardTypes">
-          <div class="hazard-option" data-type="Pothole"><span class="icon">🕳️</span>Pothole</div>
-          <div class="hazard-option" data-type="Waterlogging"><span class="icon">🌊</span>Waterlogging</div>
-          <div class="hazard-option" data-type="Accident Spot"><span class="icon">⚠️</span>Accident Spot</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="form-label">Severity Level</div>
-        <input type="range" min="1" max="5" value="3" class="severity-slider" id="severitySlider">
-        <div class="severity-labels"><span>Low</span><span>Medium</span><span>High</span><span>Critical</span><span>Extreme</span></div>
-        <div style="text-align:center"><span class="severity-value" id="severityDisplay" style="background:#f9731625;color:#f97316">⚡ Medium</span></div>
-      </div>
-      <div class="gps-bar" id="gpsBar">
-        <div class="gps-dot loading" id="gpsDot"></div>
-        <div>
-          <div class="gps-text" id="gpsStatus">📡 Tap to fetch location...</div>
-          <div class="gps-coords" id="gpsCoords">Waiting for GPS...</div>
-        </div>
-      </div>
-      <div id="reportMiniMap"></div>
-      <div class="form-group">
-        <div class="form-label">Description (Optional)</div>
-        <textarea class="form-input" id="reportDesc" rows="2" placeholder="e.g., Large pothole near bus stop..."></textarea>
-      </div>
-      <div class="form-group">
-        <div class="form-label">📸 Attach Photo Evidence</div>
-        <div class="photo-upload-area" id="photoArea">
-          <div class="photo-trigger" id="photoTrigger">
-            <div class="cam-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
-            <div class="cam-text">Tap to Add Photo</div>
-            <div class="cam-sub">Camera capture or upload from gallery</div>
-          </div>
-          <div class="photo-options" id="photoOptions">
-            <div class="photo-option-btn" id="btnCamera">
-              <div class="opt-icon" style="background:#3b82f620">📷</div>
-              <div class="opt-text"><h4>Open Camera</h4><p>Take a live photo of the hazard</p></div>
-            </div>
-            <div class="photo-option-btn" id="btnGallery">
-              <div class="opt-icon" style="background:#8b5cf620">🖼️</div>
-              <div class="opt-text"><h4>Choose from Gallery</h4><p>Select an existing photo</p></div>
-            </div>
-            <div class="photo-option-btn" id="btnFile">
-              <div class="opt-icon" style="background:#22c55e20">📁</div>
-              <div class="opt-text"><h4>Browse Files</h4><p>Upload any image file</p></div>
-            </div>
-          </div>
-          <div class="photo-preview" id="photoPreview">
-            <img id="previewImg" src="" alt="Preview">
-            <div class="preview-info">✓ Photo attached successfully</div>
-            <button class="remove-btn" id="removePhotoBtn">✕ Remove Photo</button>
-          </div>
-        </div>
-        <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
-        <input type="file" id="galleryInput" accept="image/*" style="display:none">
-        <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" style="display:none">
-      </div>
-      <div style="background:#0f172a;border:1px solid #334155;border-radius:10px;padding:8px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px">
-        <span style="font-size:14px">🕐</span>
-        <span style="font-size:11px;color:#94a3b8">Timestamp:</span>
-        <span style="font-size:12px;font-family:monospace" id="timestamp"></span>
-      </div>
-      <button class="submit-btn" id="submitBtn">🚀 Submit Report</button>
-      <div class="toast" id="toast"></div>
-      <div style="margin-top:24px;border-top:1px solid #334155;padding-top:16px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div class="form-label" style="margin:0">📋 Your Saved Reports (<span id="reportCount">0</span>)</div>
-          <div class="btn-row">
-            <button class="export-btn" id="exportBtn" style="display:none">📤 Export</button>
-            <button class="clear-btn" id="clearBtn" style="display:none">🗑️ Clear</button>
-          </div>
-        </div>
-        <div id="reportList"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- HEATMAP -->
-<div class="page" id="page-heatmap">
-  <div class="map-page-container">
-    <h2>🗺️ Live Hazard Heatmap</h2>
-    <div class="map-wrapper">
-      <div class="map-toolbar">
-        <h3>Real-Time Reports Map</h3>
-        <div class="map-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Pothole</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Waterlogging</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>Accident</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>You</div>
-        </div>
-      </div>
-      <div id="heatmap"></div>
-      <div class="map-stats">
-        <div class="map-stat-item">📍 Reports: <strong id="mapReportCount">0</strong></div>
-        <div class="map-stat-item">🔥 Zones: <strong id="mapZoneCount">0</strong></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ROUTE -->
-<div class="page" id="page-route">
-  <div class="map-page-container">
-    <h2>🛣️ Safe Route Planner</h2>
-    <div class="route-panel">
-      <div class="route-sidebar">
-        <h3>Plan Your Route</h3>
-        <div class="route-input-group"><label>From</label><input class="route-input" id="routeFrom" value="📍 My Current Location" readonly></div>
-        <div class="route-input-group"><label>To</label><input class="route-input" id="routeTo" placeholder="Enter destination..."></div>
-        <button class="route-btn" id="routeBtn">🔍 Find Safe Route</button>
-        <div style="margin-top:12px">
-          <div class="route-option recommended">
-            <h4><span style="color:#22c55e">Safe Route</span><span class="route-tag tag-safe">✓ RECOMMENDED</span></h4>
-            <p>Avoids all reported hazard zones</p>
-            <p style="color:#22c55e;font-size:10px;margin-top:4px" id="routeHazardInfo">0 hazard zones detected</p>
-          </div>
-          <div class="route-option">
-            <h4><span>Direct Route</span><span class="route-tag tag-risky">⚠ RISKY</span></h4>
-            <p>Shortest path — may pass through hazard zones</p>
-          </div>
-        </div>
-      </div>
-      <div id="routemap"></div>
-    </div>
-  </div>
-</div>
-
-<!-- CIVIC DASHBOARD -->
-<div class="page" id="page-civic">
-  <div class="civic-container">
-    <div class="civic-header">
-      <h2>🏛️ Civic Dashboard</h2>
-      <div class="civic-badge">🟢 Live Data</div>
-    </div>
-    <div class="civic-stats">
-      <div class="civic-stat"><div class="label">Total Reports</div><div class="value orange" id="civic-total">0</div></div>
-      <div class="civic-stat"><div class="label">Potholes</div><div class="value red" id="civic-potholes">0</div></div>
-      <div class="civic-stat"><div class="label">Waterlogging</div><div class="value blue" id="civic-water">0</div></div>
-      <div class="civic-stat"><div class="label">Accident Spots</div><div class="value green" id="civic-accident">0</div></div>
-    </div>
-    <div class="civic-table">
-      <div class="civic-table-header"><h3>📊 Reports by Type</h3></div>
-      <div class="bar-chart" id="barChart">
-        <div class="bar-col"><div class="bar-value" id="bar-val-1" style="color:#ef4444">0</div><div class="bar" id="bar-1" style="height:10px;background:linear-gradient(to top,#ef4444,#f97316)"></div><div class="bar-label">Potholes</div></div>
-        <div class="bar-col"><div class="bar-value" id="bar-val-2" style="color:#3b82f6">0</div><div class="bar" id="bar-2" style="height:10px;background:linear-gradient(to top,#3b82f6,#22c55e)"></div><div class="bar-label">Waterlogging</div></div>
-        <div class="bar-col"><div class="bar-value" id="bar-val-3" style="color:#f97316">0</div><div class="bar" id="bar-3" style="height:10px;background:linear-gradient(to top,#f97316,#eab308)"></div><div class="bar-label">Accidents</div></div>
-      </div>
-    </div>
-    <div class="civic-table">
-      <div class="civic-table-header">
-        <h3>📋 All Hazard Reports</h3>
-        <button class="export-btn" id="civicExportBtn">📤 Export CSV</button>
-      </div>
-      <div class="table-scroll">
-        <table>
-          <thead><tr><th>#</th><th>Type</th><th>Severity</th><th>Location</th><th>Time</th><th>Description</th></tr></thead>
-          <tbody id="civicTableBody">
-            <tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px">No reports yet. Go to Report tab to add hazards!</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="civic-table">
-      <div class="civic-table-header"><h3>🔬 DBSCAN Verification Engine</h3></div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px">
-        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">500m</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Cluster Radius (ε)</div></div>
-        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">3+</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Min Reports</div></div>
-        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">48h</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Time Window</div></div>
-      </div>
-      <p style="font-size:11px;color:#64748b;padding:0 16px 16px;text-align:center">Hotspot confirmed after 3+ distinct users report within 500m in 48 hours.</p>
-    </div>
-  </div>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-<script>
-(function(){
-  // ===== STATE =====
-  var currentLat = null, currentLng = null, selectedHazard = null, photoData = null;
-  var heatmapObj = null, routemapObj = null, miniMapObj = null, miniMarker = null;
-  var reports = [];
-  try { reports = JSON.parse(localStorage.getItem('roadguard_reports') || '[]'); } catch(e) { reports = []; }
-
-  // ===== NAVIGATION =====
-  var navBtns = document.querySelectorAll('.nav-links button');
-  navBtns.forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var page = this.getAttribute('data-page');
-      document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-      document.getElementById('page-' + page).classList.add('active');
-      navBtns.forEach(function(b) { b.classList.remove('active'); });
-      this.classList.add('active');
-      onPageShow(page);
-    });
-  });
-
-  // Hero button
-  document.getElementById('heroReportBtn').addEventListener('click', function() {
-    navBtns.forEach(function(b) { b.classList.remove('active'); });
-    navBtns[1].classList.add('active');
-    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-    document.getElementById('page-report').classList.add('active');
-    onPageShow('report');
-  });
-
-  function onPageShow(page) {
-    if (page === 'heatmap') setTimeout(initHeatmap, 150);
-    if (page === 'route') setTimeout(initRouteMap, 150);
-    if (page === 'home') updateHomeStats();
-    if (page === 'civic') updateCivicDashboard();
-    if (page === 'report') { getLocation(); updateReportList(); updateTimestamp(); setTimeout(initMiniMap, 200); }
-  }
-
-  // ===== GPS =====
-  function getLocation() {
-    var dot = document.getElementById('gpsDot');
-    var status = document.getElementById('gpsStatus');
-    var coords = document.getElementById('gpsCoords');
-    dot.className = 'gps-dot loading';
-    status.textContent = '📡 Fetching your location...';
-    coords.textContent = 'Waiting for GPS...';
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(pos) {
-        currentLat = pos.coords.latitude;
-        currentLng = pos.coords.longitude;
-        dot.className = 'gps-dot active';
-        status.textContent = '✅ GPS Location Captured';
-        coords.textContent = currentLat.toFixed(6) + '° N, ' + currentLng.toFixed(6) + '° E';
-        updateMiniMap();
-      }, function() {
-        dot.className = 'gps-dot error';
-        status.textContent = '⚠️ Using default (tap to retry)';
-        coords.textContent = '11.0168° N, 76.9558° E (Coimbatore)';
-        currentLat = 11.0168; currentLng = 76.9558;
-        updateMiniMap();
-      }, { enableHighAccuracy: true, timeout: 10000 });
-    } else {
-      dot.className = 'gps-dot error';
-      status.textContent = '❌ GPS not supported';
-      coords.textContent = '11.0168° N, 76.9558° E';
-      currentLat = 11.0168; currentLng = 76.9558;
-      updateMiniMap();
-    }
-  }
-
-  document.getElementById('gpsBar').addEventListener('click', getLocation);
-
-  // ===== MINI MAP =====
-  function initMiniMap() {
-    if (miniMapObj) { miniMapObj.remove(); miniMapObj = null; }
-    var lat = currentLat || 11.0168, lng = currentLng || 76.9558;
-    miniMapObj = L.map('reportMiniMap', { zoomControl: false, attributionControl: false }).setView([lat, lng], 15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(miniMapObj);
-    miniMarker = L.marker([lat, lng]).addTo(miniMapObj).bindPopup('📍 Report Location');
-    setTimeout(function() { miniMapObj.invalidateSize(); }, 100);
-  }
-
-  function updateMiniMap() {
-    if (miniMapObj && currentLat && currentLng) {
-      miniMapObj.setView([currentLat, currentLng], 15);
-      if (miniMarker) miniMarker.setLatLng([currentLat, currentLng]);
-    }
-  }
-
-  // ===== SEVERITY =====
-  var severitySlider = document.getElementById('severitySlider');
-  severitySlider.addEventListener('input', updateSeverity);
-  function updateSeverity() {
-    var val = severitySlider.value;
-    var display = document.getElementById('severityDisplay');
-    var levels = ['🟢 Low', '🟡 Moderate', '⚡ Medium', '🔴 High', '💀 Critical'];
-    var colors = ['#22c55e', '#eab308', '#f97316', '#ef4444', '#dc2626'];
-    display.textContent = levels[val - 1];
-    display.style.color = colors[val - 1];
-    display.style.background = colors[val - 1] + '25';
-  }
-
-  // ===== HAZARD SELECTION =====
-  document.querySelectorAll('.hazard-option').forEach(function(el) {
-    el.addEventListener('click', function() {
-      document.querySelectorAll('.hazard-option').forEach(function(o) { o.classList.remove('selected'); });
-      this.classList.add('selected');
-      selectedHazard = this.getAttribute('data-type');
-    });
-  });
-
-  // ===== PHOTO =====
-  document.getElementById('photoTrigger').addEventListener('click', function() {
-    document.getElementById('photoOptions').classList.toggle('show');
-  });
-  document.getElementById('btnCamera').addEventListener('click', function() { document.getElementById('cameraInput').click(); });
-  document.getElementById('btnGallery').addEventListener('click', function() { document.getElementById('galleryInput').click(); });
-  document.getElementById('btnFile').addEventListener('click', function() { document.getElementById('fileInput').click(); });
-
-  function handlePhoto(input) {
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        photoData = e.target.result;
-        document.getElementById('previewImg').src = photoData;
-        document.getElementById('photoPreview').classList.add('show');
-        document.getElementById('photoTrigger').style.display = 'none';
-        document.getElementById('photoOptions').classList.remove('show');
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  document.getElementById('cameraInput').addEventListener('change', function() { handlePhoto(this); });
-  document.getElementById('galleryInput').addEventListener('change', function() { handlePhoto(this); });
-  document.getElementById('fileInput').addEventListener('change', function() { handlePhoto(this); });
-
-  function removePhoto() {
-    photoData = null;
-    document.getElementById('photoPreview').classList.remove('show');
-    document.getElementById('photoTrigger').style.display = 'flex';
-    document.getElementById('cameraInput').value = '';
-    document.getElementById('galleryInput').value = '';
-    document.getElementById('fileInput').value = '';
-  }
-  document.getElementById('removePhotoBtn').addEventListener('click', removePhoto);
-
-  // ===== TIMESTAMP =====
-  function updateTimestamp() {
-    document.getElementById('timestamp').textContent = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-  }
-  setInterval(updateTimestamp, 1000);
-  updateTimestamp();
-
-  // ===== SUBMIT =====
-  document.getElementById('submitBtn').addEventListener('click', function() {
-    if (!selectedHazard) { showToast('❌ Please select a hazard type!', 'error'); return; }
-    if (!currentLat) { showToast('❌ Waiting for GPS — tap GPS bar to retry', 'error'); return; }
-
-    var severity = parseInt(severitySlider.value);
-    var severityLabels = ['Low', 'Moderate', 'Medium', 'High', 'Critical'];
-
-    var report = {
-      id: Date.now(),
-      type: selectedHazard,
-      lat: currentLat + (Math.random() - 0.5) * 0.002,
-      lng: currentLng + (Math.random() - 0.5) * 0.002,
-      severity: severity,
-      severityLabel: severityLabels[severity - 1],
-      description: document.getElementById('reportDesc').value,
-      photo: photoData,
-      timestamp: new Date().toISOString(),
-      displayTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-    };
-
-    reports.push(report);
-    saveReports();
-
-    // Reset form
-    selectedHazard = null;
-    photoData = null;
-    document.querySelectorAll('.hazard-option').forEach(function(o) { o.classList.remove('selected'); });
-    document.getElementById('reportDesc').value = '';
-    severitySlider.value = 3;
-    updateSeverity();
-    removePhoto();
-
-    showToast('✅ Report #' + reports.length + ' saved! View on Heatmap 🗺️', 'success');
-    updateReportList();
-  });
-
-  function showToast(msg, type) {
-    var toast = document.getElementById('toast');
-    toast.className = 'toast ' + type;
-    toast.textContent = msg;
-    setTimeout(function() { toast.className = 'toast'; }, 4000);
-  }
-
-  function saveReports() {
-    try {
-      var toSave = reports.map(function(r) {
-        var c = {}; for (var k in r) c[k] = r[k];
-        if (c.photo && c.photo.length > 50000) c.photo = c.photo.substring(0, 50000);
-        return c;
-      });
-      localStorage.setItem('roadguard_reports', JSON.stringify(toSave));
-    } catch(e) {
-      var noPhoto = reports.map(function(r) { var c = {}; for (var k in r) c[k] = r[k]; c.photo = null; return c; });
-      localStorage.setItem('roadguard_reports', JSON.stringify(noPhoto));
-    }
-  }
-
-  // ===== REPORT LIST =====
-  function updateReportList() {
-    var list = document.getElementById('reportList');
-    var clearBtn = document.getElementById('clearBtn');
-    var exportBtn = document.getElementById('exportBtn');
-    document.getElementById('reportCount').textContent = reports.length;
-
-    if (reports.length === 0) {
-      list.innerHTML = '<div class="no-reports"><div class="big-icon">📭</div><p>No reports yet. Submit your first hazard report above!</p></div>';
-      clearBtn.style.display = 'none';
-      exportBtn.style.display = 'none';
-      return;
-    }
-
-    clearBtn.style.display = 'inline-block';
-    exportBtn.style.display = 'inline-block';
-    var typeIcons = { 'Pothole': '🕳️', 'Waterlogging': '🌊', 'Accident Spot': '⚠️' };
-    var sevColors = { 'Low': '#22c55e', 'Moderate': '#eab308', 'Medium': '#f97316', 'High': '#ef4444', 'Critical': '#dc2626' };
-    var html = '';
-
-    for (var i = reports.length - 1; i >= 0; i--) {
-      var r = reports[i];
-      var sc = sevColors[r.severityLabel] || '#f97316';
-      html += '<div class="report-item">';
-      html += '<div class="ri-header"><span class="ri-type">' + (typeIcons[r.type] || '📍') + ' ' + r.type + '</span><span class="ri-time">' + r.displayTime + '</span></div>';
-      html += '<div class="ri-coords">📍 ' + r.lat.toFixed(6) + '°N, ' + r.lng.toFixed(6) + '°E</div>';
-      if (r.severityLabel) html += '<span class="ri-severity" style="background:' + sc + '20;color:' + sc + '">' + r.severityLabel + '</span>';
-      if (r.description) html += '<div class="ri-desc">📝 ' + r.description + '</div>';
-      if (r.photo && r.photo.length > 100) html += '<img class="ri-photo" src="' + r.photo + '" alt="Photo">';
-      html += '<button class="delete-btn" data-id="' + r.id + '">🗑️ Delete</button>';
-      html += '</div>';
-    }
-    list.innerHTML = html;
-
-    // Attach delete handlers
-    list.querySelectorAll('.delete-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var id = parseInt(this.getAttribute('data-id'));
-        reports = reports.filter(function(r) { return r.id !== id; });
-        saveReports();
-        updateReportList();
-      });
-    });
-  }
-
-  document.getElementById('clearBtn').addEventListener('click', function() {
-    if (confirm('Delete all reports? This cannot be undone.')) {
-      reports = [];
-      localStorage.removeItem('roadguard_reports');
-      updateReportList();
-    }
-  });
-
-  function exportReports() {
-    if (reports.length === 0) { alert('No reports to export!'); return; }
-    var csv = 'ID,Type,Severity,Latitude,Longitude,Description,Timestamp\n';
-    reports.forEach(function(r) {
-      csv += r.id + ',' + r.type + ',' + (r.severityLabel || 'N/A') + ',' + r.lat.toFixed(6) + ',' + r.lng.toFixed(6) + ',"' + (r.description || '') + '",' + r.displayTime + '\n';
-    });
-    var blob = new Blob([csv], { type: 'text/csv' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'roadguard_reports.csv';
-    a.click();
-  }
-  document.getElementById('exportBtn').addEventListener('click', exportReports);
-  document.getElementById('civicExportBtn').addEventListener('click', exportReports);
-
-  // ===== HOME STATS =====
-  function updateHomeStats() {
-    document.getElementById('stat-reports').textContent = reports.length;
-    var zones = {}, potholes = 0, waterlog = 0;
-    reports.forEach(function(r) {
-      zones[Math.round(r.lat * 100) + ',' + Math.round(r.lng * 100)] = true;
-      if (r.type === 'Pothole') potholes++;
-      if (r.type === 'Waterlogging') waterlog++;
-    });
-    document.getElementById('stat-hotspots').textContent = Object.keys(zones).length;
-    document.getElementById('stat-potholes').textContent = potholes;
-    document.getElementById('stat-waterlog').textContent = waterlog;
-  }
-
-  // ===== HEATMAP =====
-  function initHeatmap() {
-    if (heatmapObj) { heatmapObj.remove(); heatmapObj = null; }
-    var lat = currentLat || 11.0168, lng = currentLng || 76.9558;
-    heatmapObj = L.map('heatmap').setView([lat, lng], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(heatmapObj);
-
-    if (currentLat && currentLng) {
-      L.circleMarker([currentLat, currentLng], { radius: 10, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.9, weight: 2 })
-        .addTo(heatmapObj).bindPopup('<b>📍 You are here</b>');
-    }
-
-    var typeColors = { 'Pothole': '#ef4444', 'Waterlogging': '#3b82f6', 'Accident Spot': '#f97316' };
-    var typeIcons = { 'Pothole': '🕳️', 'Waterlogging': '🌊', 'Accident Spot': '⚠️' };
-    var heatPoints = [];
-
-    reports.forEach(function(r) {
-      var color = typeColors[r.type] || '#f97316';
-      L.circleMarker([r.lat, r.lng], { radius: 8, color: color, fillColor: color, fillOpacity: 0.7 })
-        .addTo(heatmapObj)
-        .bindPopup('<b>' + (typeIcons[r.type] || '') + ' ' + r.type + '</b><br>📍 ' + r.lat.toFixed(4) + ', ' + r.lng.toFixed(4) + '<br>⚡ ' + (r.severityLabel || 'N/A') + '<br>🕐 ' + r.displayTime + (r.description ? '<br>📝 ' + r.description : ''));
-      heatPoints.push([r.lat, r.lng, (r.severity || 3) / 5]);
-    });
-
-    if (heatPoints.length > 0) {
-      L.heatLayer(heatPoints, { radius: 35, blur: 25, maxZoom: 17, gradient: { 0.2: '#3b82f6', 0.4: '#eab308', 0.6: '#f97316', 0.8: '#ef4444', 1: '#dc2626' } }).addTo(heatmapObj);
-    }
-
-    if (reports.length === 0) {
-      L.popup().setLatLng([lat, lng]).setContent('📭 No reports yet!<br>Go to Report tab to add hazards.').openOn(heatmapObj);
-    }
-
-    document.getElementById('mapReportCount').textContent = reports.length;
-    var zones = {};
-    reports.forEach(function(r) { zones[Math.round(r.lat * 100) + ',' + Math.round(r.lng * 100)] = true; });
-    document.getElementById('mapZoneCount').textContent = Object.keys(zones).length;
-
-    setTimeout(function() { heatmapObj.invalidateSize(); }, 200);
-  }
-
-  // ===== ROUTE MAP =====
-  function initRouteMap() {
-    if (routemapObj) { routemapObj.remove(); routemapObj = null; }
-    var lat = currentLat || 11.0168, lng = currentLng || 76.9558;
-    routemapObj = L.map('routemap').setView([lat, lng], 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(routemapObj);
-
-    if (currentLat && currentLng) {
-      L.marker([currentLat, currentLng]).addTo(routemapObj).bindPopup('📍 Your Location').openPopup();
-    }
-
-    reports.forEach(function(r) {
-      L.circle([r.lat, r.lng], { radius: 200, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.15, weight: 1 }).addTo(routemapObj);
-      L.circleMarker([r.lat, r.lng], { radius: 6, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.8 })
-        .addTo(routemapObj).bindPopup('⚠️ ' + r.type + ' — Avoid this zone!');
-    });
-
-    document.getElementById('routeHazardInfo').textContent = reports.length + ' hazard zone(s) detected';
-    setTimeout(function() { routemapObj.invalidateSize(); }, 200);
-  }
-
-  document.getElementById('routeBtn').addEventListener('click', function() {
-    var dest = document.getElementById('routeTo').value;
-    if (!dest) { alert('Please enter a destination!'); return; }
-    alert('🛣️ Safe Route calculated!\n\nAvoiding ' + reports.length + ' hazard zone(s).\n\n💡 In the full version, this uses OSRM routing API for actual safest path.');
-  });
-
-  // ===== CIVIC DASHBOARD =====
-  function updateCivicDashboard() {
-    var potholes = 0, water = 0, accident = 0;
-    reports.forEach(function(r) {
-      if (r.type === 'Pothole') potholes++;
-      if (r.type === 'Waterlogging') water++;
-      if (r.type === 'Accident Spot') accident++;
-    });
-    document.getElementById('civic-total').textContent = reports.length;
-    document.getElementById('civic-potholes').textContent = potholes;
-    document.getElementById('civic-water').textContent = water;
-    document.getElementById('civic-accident').textContent = accident;
-
-    // Bar chart
-    var max = Math.max(potholes, water, accident, 1);
-    document.getElementById('bar-val-1').textContent = potholes;
-    document.getElementById('bar-
+  <div class="report-container">
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="report-header"><h2>⚠️ Report a Hazard</h2><p>Your report helps make roads safer</p></div>
+      <div class="form-group">
+        <div class="form-label">Hazard Type</div>
+        <div class="hazard-types" id="hazardTypes">
+          <div class="hazard-option" data-type="Pothole"><span class="icon">🕳️</span>Pothole</div>
+          <div class="hazard-option" data-type="Waterlogging"><span class="icon">🌊</span>Waterlogging</div>
+          <div class="hazard-option" data-type="Accident Spot"><span class="icon">⚠️</span>Accident Spot</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Severity Level</div>
+        <input type="range" min="1" max="5" value="3" class="severity-slider" id="severitySlider">
+        <div class="severity-labels"><span>Low</span><span>Medium</span><span>High</span><span>Critical</span><span>Extreme</span></div>
+        <div style="text-align:center"><span class="severity-value" id="severityDisplay" style="background:#f9731625;color:#f97316">⚡ Medium</span></div>
+      </div>
+      <div class="gps-bar" id="gpsBar">
+        <div class="gps-dot loading" id="gpsDot"></div>
+        <div>
+          <div class="gps-text" id="gpsStatus">📡 Tap to fetch location...</div>
+          <div class="gps-coords" id="gpsCoords">Waiting for GPS...</div>
+        </div>
+      </div>
+      <div id="reportMiniMap"></div>
+      <div class="form-group">
+        <div class="form-label">Description (Optional)</div>
+        <textarea class="form-input" id="reportDesc" rows="2" placeholder="e.g., Large pothole near bus stop..."></textarea>
+      </div>
+      <div class="form-group">
+        <div class="form-label">📸 Attach Photo Evidence</div>
+        <div class="photo-upload-area" id="photoArea">
+          <div class="photo-trigger" id="photoTrigger">
+            <div class="cam-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2
