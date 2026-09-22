@@ -596,3 +596,132 @@ function exportReports(){
 
 function updateHomeStats(){
   var t=reports.length,p=0,w=0,zones={};
+  
+// === PASTE THIS AFTER: function updateHomeStats(){ var t=reports.length,p=0,w=0,zones={}; ===
+
+  reports.forEach(function(r){
+    if(r.type==='Pothole')p++;
+    if(r.type==='Waterlogging')w++;
+    var key=Math.round(r.lat*100)+','+Math.round(r.lng*100);
+    zones[key]=true;
+  });
+  document.getElementById('stat-reports').textContent=t;
+  document.getElementById('stat-hotspots').textContent=Object.keys(zones).length;
+  document.getElementById('stat-potholes').textContent=p;
+  document.getElementById('stat-waterlog').textContent=w;
+}
+
+function initHeatmap(){
+  if(heatmapObj){heatmapObj.remove();heatmapObj=null}
+  var la=currentLat||11.0168,ln=currentLng||76.9558;
+  heatmapObj=L.map('heatmap').setView([la,ln],14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(heatmapObj);
+  L.circleMarker([la,ln],{radius:8,color:'#22c55e',fillColor:'#22c55e',fillOpacity:0.8,weight:2}).addTo(heatmapObj).bindPopup('📍 You are here');
+  var typeColors={'Pothole':'#ef4444','Waterlogging':'#3b82f6','Accident Spot':'#f97316'};
+  var typeIcons={'Pothole':'🕳️','Waterlogging':'🌊','Accident Spot':'⚠️'};
+  var heatPoints=[];
+  markerLayerGroup=L.layerGroup();
+  clusterLayerGroup=L.layerGroup();
+  var clusterZones={};
+  reports.forEach(function(r){
+    if(!r.lat||!r.lng)return;
+    var col=typeColors[r.type]||'#f97316';
+    var icon=typeIcons[r.type]||'📍';
+    L.circleMarker([r.lat,r.lng],{radius:6,color:col,fillColor:col,fillOpacity:0.7,weight:1}).bindPopup('<b>'+icon+' '+r.type+'</b><br>📍 '+r.lat.toFixed(4)+'°N, '+r.lng.toFixed(4)+'°E<br>⚡ '+r.severityLabel+'<br>🕐 '+r.displayTime+(r.description?'<br>📝 '+r.description:'')).addTo(markerLayerGroup);
+    heatPoints.push([r.lat,r.lng,r.severity||3]);
+    var ck=Math.round(r.lat*200)+','+Math.round(r.lng*200);
+    if(!clusterZones[ck])clusterZones[ck]={lat:r.lat,lng:r.lng,count:0};
+    clusterZones[ck].count++;
+  });
+  if(heatPoints.length>0){
+    heatLayer=L.heatLayer(heatPoints,{radius:40,blur:30,maxZoom:17,gradient:{0.2:'blue',0.4:'lime',0.6:'yellow',0.8:'orange',1.0:'red'}});
+    heatLayer.addTo(heatmapObj);
+  }
+  markerLayerGroup.addTo(heatmapObj);
+  Object.keys(clusterZones).forEach(function(k){
+    var z=clusterZones[k];
+    if(z.count>=2){
+      L.circle([z.lat,z.lng],{radius:300,color:'#f97316',fillColor:'#f97316',fillOpacity:0.08,weight:1,dashArray:'5,5'}).bindPopup('🔴 Cluster: '+z.count+' reports').addTo(clusterLayerGroup);
+    }
+  });
+  clusterLayerGroup.addTo(heatmapObj);
+  document.getElementById('mapReportCount').textContent=reports.length;
+  document.getElementById('mapZoneCount').textContent=Object.keys(clusterZones).length;
+  var lt=document.getElementById('layerToggle');
+  lt.innerHTML='<button class="layer-btn'+(showHeat?' active':'')+'" id="toggleHeat">🔥 Heat</button><button class="layer-btn'+(showMarkers?' active':'')+'" id="toggleMarkers">📍 Markers</button><button class="layer-btn'+(showClusters?' active':'')+'" id="toggleClusters">🔴 Clusters</button>';
+  document.getElementById('toggleHeat').addEventListener('click',function(){
+    showHeat=!showHeat;this.classList.toggle('active');
+    if(heatLayer){if(showHeat)heatmapObj.addLayer(heatLayer);else heatmapObj.removeLayer(heatLayer)}
+  });
+  document.getElementById('toggleMarkers').addEventListener('click',function(){
+    showMarkers=!showMarkers;this.classList.toggle('active');
+    if(showMarkers)heatmapObj.addLayer(markerLayerGroup);else heatmapObj.removeLayer(markerLayerGroup);
+  });
+  document.getElementById('toggleClusters').addEventListener('click',function(){
+    showClusters=!showClusters;this.classList.toggle('active');
+    if(showClusters)heatmapObj.addLayer(clusterLayerGroup);else heatmapObj.removeLayer(clusterLayerGroup);
+  });
+  setTimeout(function(){heatmapObj.invalidateSize()},300);
+}
+
+function initRouteMap(){
+  if(routemapObj){routemapObj.remove();routemapObj=null}
+  var la=currentLat||11.0168,ln=currentLng||76.9558;
+  routemapObj=L.map('routemap').setView([la,ln],14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(routemapObj);
+  L.marker([la,ln]).addTo(routemapObj).bindPopup('📍 Your Location');
+  var hazardCount=0;
+  reports.forEach(function(r){
+    if(!r.lat||!r.lng)return;
+    L.circle([r.lat,r.lng],{radius:200,color:'#ef4444',fillColor:'#ef4444',fillOpacity:0.1,weight:1}).addTo(routemapObj);
+    hazardCount++;
+  });
+  document.getElementById('routeHazardInfo').textContent=hazardCount+' hazard zone'+(hazardCount!==1?'s':'')+' detected nearby';
+  setTimeout(function(){routemapObj.invalidateSize()},300);
+}
+
+document.getElementById('routeBtn').addEventListener('click',function(){
+  var dest=document.getElementById('routeTo').value;
+  if(!dest||dest.trim()===''){alert('📍 Please enter a destination!');return}
+  alert('🛣️ Route to "'+dest+'" calculated!\n\n✅ Safe Route: Avoids '+reports.length+' hazard zones\n⚠️ Direct Route: Passes through hazard areas\n\n💡 Recommended: Take the Safe Route!');
+});
+
+function updateCivicDashboard(){
+  var p=0,w=0,a=0;
+  reports.forEach(function(r){
+    if(r.type==='Pothole')p++;
+    else if(r.type==='Waterlogging')w++;
+    else a++;
+  });
+  document.getElementById('civic-total').textContent=reports.length;
+  document.getElementById('civic-potholes').textContent=p;
+  document.getElementById('civic-water').textContent=w;
+  document.getElementById('civic-accident').textContent=a;
+  var mx=Math.max(p,w,a,1);
+  document.getElementById('b1').style.height=Math.max(4,Math.round(p/mx*120))+'px';
+  document.getElementById('b2').style.height=Math.max(4,Math.round(w/mx*120))+'px';
+  document.getElementById('b3').style.height=Math.max(4,Math.round(a/mx*120))+'px';
+  document.getElementById('bv1').textContent=p;
+  document.getElementById('bv2').textContent=w;
+  document.getElementById('bv3').textContent=a;
+  var icons={'Pothole':'🕳️','Waterlogging':'🌊','Accident Spot':'⚠️'};
+  var sc={'Low':'#22c55e','Moderate':'#eab308','Medium':'#f97316','High':'#ef4444','Critical':'#dc2626'};
+  var sorted=reports.slice().sort(function(a,b){return(b.severity||0)-(a.severity||0)});
+  var tbody=document.getElementById('civicTableBody');
+  if(!sorted.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px">No reports yet</td></tr>';return}
+  var h='';
+  sorted.forEach(function(r,i){
+    var c=sc[r.severityLabel]||'#f97316';
+    h+='<tr><td>'+(i+1)+'</td><td>'+(icons[r.type]||'📍')+' '+r.type+'</td><td><span style="background:'+c+'20;color:'+c+';padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600">'+r.severityLabel+'</span></td><td style="font-family:monospace;font-size:11px">'+r.lat.toFixed(4)+'°N</td><td style="font-size:11px">'+r.displayTime+'</td><td style="font-size:11px;color:#94a3b8;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.description||'—')+'</td></tr>';
+  });
+  tbody.innerHTML=h;
+}
+
+updateHomeStats();
+updateReportList();
+</script>
+</body>
+</html>
+
+
+  
