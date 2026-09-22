@@ -1,56 +1,39 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RoadGuard - Crowd-Sourced Road Hazard Reporting</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.5;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-
-/* NAVBAR */
+body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.5}
 .navbar{background:#1e293b;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #334155;position:sticky;top:0;z-index:1000;flex-wrap:wrap;gap:6px}
 .logo{font-size:20px;font-weight:700;color:#f97316;display:flex;align-items:center;gap:8px}
 .nav-links{display:flex;gap:2px;flex-wrap:wrap}
 .nav-links button{padding:6px 10px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:500;color:#94a3b8;background:none;border:none;font-family:inherit;transition:all .2s}
 .nav-links button:hover{background:#334155;color:#fff}
 .nav-links button.active{background:#f97316;color:#fff}
-
-/* PAGES */
 .page{display:none}.page.active{display:block}
-
-/* HERO */
-.hero{text-align:center;padding:40px 16px 30px;background:linear-gradient(135deg,#1e293b,#0f172a 50%,#1a1a2e);position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,#f9731608 0%,transparent 50%);animation:heroGlow 8s ease-in-out infinite alternate}
-@keyframes heroGlow{0%{transform:translate(0,0)}100%{transform:translate(5%,3%)}}
-.hero h1{font-size:26px;font-weight:800;margin-bottom:12px;position:relative}
+.hero{text-align:center;padding:40px 16px 30px;background:linear-gradient(135deg,#1e293b,#0f172a 50%,#1a1a2e)}
+.hero h1{font-size:28px;font-weight:800;margin-bottom:12px}
 .hero h1 span{color:#f97316}
-.hero p{font-size:14px;color:#94a3b8;max-width:600px;margin:0 auto 24px;position:relative}
-.hero-badge{display:inline-block;background:#f9731620;color:#f97316;padding:6px 16px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px;position:relative}
-
-/* ANIMATED STATS */
+.hero p{font-size:15px;color:#94a3b8;max-width:600px;margin:0 auto 24px}
+.hero-badge{display:inline-block;background:#f9731620;color:#f97316;padding:6px 16px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
 .stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:24px 16px;max-width:500px;margin:0 auto}
-.stat-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;text-align:center;transition:all .3s;cursor:pointer}
-.stat-card:hover{border-color:#f97316;transform:translateY(-2px);box-shadow:0 8px 24px #f9731615}
+.stat-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;text-align:center;transition:all .3s}
+.stat-card:hover{border-color:#f97316;transform:translateY(-2px)}
 .stat-value{font-size:28px;font-weight:700;color:#f97316;font-family:monospace}
 .stat-label{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
-
-/* CLICKABLE FEATURE CARDS */
 .section{padding:32px 16px;max-width:1100px;margin:0 auto}
 .section-title{font-size:20px;font-weight:700;margin-bottom:20px;text-align:center}
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.feature-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
-.feature-card:hover{border-color:#f97316;transform:translateY(-3px);box-shadow:0 8px 24px #f9731615}
-.feature-card:active{transform:scale(.97)}
-.feature-card .tap-hint{position:absolute;top:8px;right:8px;font-size:9px;background:#f9731625;color:#f97316;padding:2px 8px;border-radius:10px;font-weight:600}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.feature-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;transition:all .2s}
+.feature-card:hover{border-color:#f97316;transform:translateY(-2px)}
 .feature-icon{font-size:28px;margin-bottom:10px}
 .feature-card h3{font-size:14px;font-weight:600;margin-bottom:6px}
 .feature-card p{font-size:12px;color:#94a3b8}
-
-/* REPORT PAGE */
 .report-container{max-width:420px;margin:30px auto;padding:0 16px}
 .phone-frame{background:#1e293b;border:2px solid #334155;border-radius:24px;padding:20px}
 .phone-notch{width:100px;height:20px;background:#0f172a;border-radius:0 0 12px 12px;margin:-20px auto 16px}
@@ -61,86 +44,49 @@ a{color:inherit;text-decoration:none}
 .form-label{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:block}
 .form-input{width:100%;padding:10px 14px;background:#0f172a;border:1px solid #334155;border-radius:10px;color:#e2e8f0;font-size:13px;font-family:inherit;resize:vertical}
 .form-input:focus{outline:none;border-color:#f97316}
-
-/* HAZARD TYPES */
 .hazard-types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .hazard-option{text-align:center;padding:14px 6px;background:#0f172a;border:2px solid #334155;border-radius:12px;cursor:pointer;transition:all .2s;font-size:11px;font-weight:500}
 .hazard-option:hover{border-color:#f97316}
 .hazard-option.selected{border-color:#f97316;background:#f9731615}
 .hazard-option .icon{font-size:24px;display:block;margin-bottom:4px}
-
-/* SEVERITY */
 .severity-slider{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:linear-gradient(to right,#22c55e,#eab308,#f97316,#ef4444);outline:none;margin:8px 0}
-.severity-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;cursor:pointer;border:3px solid #f97316;box-shadow:0 2px 8px #00000040}
+.severity-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;cursor:pointer;border:3px solid #f97316}
 .severity-labels{display:flex;justify-content:space-between;font-size:9px;color:#64748b}
 .severity-value{display:inline-block;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600}
-
-/* GPS - ENHANCED */
 .gps-bar{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer;transition:all .2s}
 .gps-bar:hover{border-color:#f97316}
 .gps-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .gps-dot.active{background:#22c55e;animation:pulse 2s ease-in-out infinite}
 .gps-dot.loading{background:#eab308;animation:pulse 1s ease-in-out infinite}
 .gps-dot.error{background:#ef4444}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .gps-text{font-size:11px;color:#94a3b8}
 .gps-coords{font-size:12px;font-family:monospace;color:#e2e8f0}
-.gps-details{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
-.gps-detail-card{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:8px;text-align:center}
-.gps-detail-card .gd-val{font-size:13px;font-weight:700;color:#f97316;font-family:monospace}
-.gps-detail-card .gd-label{font-size:8px;color:#64748b;text-transform:uppercase;margin-top:2px}
-#reportMiniMap{height:140px;border-radius:8px;margin-bottom:14px;border:1px solid #334155}
-
-/* PHOTO */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+#reportMiniMap{height:120px;border-radius:8px;margin-bottom:14px;border:1px solid #334155}
 .photo-upload-area{border:2px dashed #334155;border-radius:12px;overflow:hidden;transition:all .2s}
 .photo-upload-area:hover{border-color:#f97316}
 .photo-trigger{display:flex;flex-direction:column;align-items:center;padding:16px;cursor:pointer}
-.cam-icon{width:48px;height:48px;background:#f9731615;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
-.cam-text{font-size:13px;font-weight:600}
-.cam-sub{font-size:10px;color:#64748b;margin-top:2px}
+.photo-trigger .cam-icon{width:48px;height:48px;background:#f9731615;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.photo-trigger .cam-text{font-size:13px;font-weight:600}
+.photo-trigger .cam-sub{font-size:10px;color:#64748b;margin-top:2px}
 .photo-options{display:none;background:#0f172a;border-top:1px solid #334155}
 .photo-options.show{display:block}
 .photo-option-btn{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:all .15s;border-bottom:1px solid #1e293b}
 .photo-option-btn:last-child{border-bottom:none}
 .photo-option-btn:hover{background:#1e293b}
-.opt-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.opt-text h4{font-size:12px;font-weight:600}
-.opt-text p{font-size:10px;color:#64748b}
+.photo-option-btn .opt-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.photo-option-btn .opt-text h4{font-size:12px;font-weight:600}
+.photo-option-btn .opt-text p{font-size:10px;color:#64748b}
 .photo-preview{display:none;padding:12px}
 .photo-preview.show{display:block}
 .photo-preview img{width:100%;border-radius:8px;max-height:200px;object-fit:cover}
-.photo-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:#94a3b8}
-.preview-info{text-align:center;margin-top:6px;font-size:11px;color:#22c55e;font-weight:600}
-.remove-btn{display:block;margin:8px auto 0;padding:6px 16px;background:#ef444420;color:#ef4444;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
-
-/* SUBMIT */
-.submit-btn{width:100%;padding:12px;background:#f97316;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;position:relative;overflow:hidden}
+.photo-preview .preview-info{text-align:center;margin-top:8px;font-size:11px;color:#22c55e;font-weight:600}
+.photo-preview .remove-btn{display:block;margin:8px auto 0;padding:6px 16px;background:#ef444420;color:#ef4444;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.submit-btn{width:100%;padding:12px;background:#f97316;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
 .submit-btn:hover{background:#ea580c}
-.submit-btn:active{transform:scale(.98)}
-.submit-btn.submitting{background:#475569;pointer-events:none}
-.toast{display:none;text-align:center;margin-top:14px;padding:10px;border-radius:10px;font-size:12px;font-weight:600;animation:slideUp .3s ease-out}
+.toast{display:none;text-align:center;margin-top:14px;padding:10px;border-radius:10px;font-size:12px;font-weight:600}
 .toast.success{display:block;background:#22c55e15;border:1px solid #22c55e30;color:#22c55e}
 .toast.error{display:block;background:#ef444415;border:1px solid #ef444430;color:#ef4444}
-@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-
-/* REPORT LIST - ENHANCED */
-.report-filter{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.filter-btn{padding:4px 10px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid #334155;background:#0f172a;color:#94a3b8;font-family:inherit;transition:all .2s}
-.filter-btn.active{background:#f97316;color:#fff;border-color:#f97316}
-.filter-btn:hover{border-color:#f97316}
-.report-item{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:12px;margin-bottom:8px;transition:all .2s;animation:fadeIn .3s ease-out}
-.report-item:hover{border-color:#475569}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.ri-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.ri-type{font-size:12px;font-weight:600}
-.ri-time{font-size:10px;color:#64748b}
-.ri-coords{font-size:11px;font-family:monospace;color:#94a3b8}
-.ri-desc{font-size:11px;color:#94a3b8;margin-top:4px}
-.ri-severity{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;margin-top:4px}
-.ri-photo{width:100%;max-height:120px;object-fit:cover;border-radius:6px;margin-top:8px}
-.delete-btn{background:#ef444420;color:#ef4444;border:none;padding:4px 10px;border-radius:6px;font-size:10px;cursor:pointer;font-family:inherit;margin-top:6px}
-
-/* MAP PAGES */
 .map-page-container{max-width:900px;margin:20px auto;padding:0 16px}
 .map-page-container h2{font-size:18px;font-weight:700;margin-bottom:12px}
 .map-wrapper{background:#1e293b;border:1px solid #334155;border-radius:16px;overflow:hidden}
@@ -153,14 +99,7 @@ a{color:inherit;text-decoration:none}
 .map-stats{display:flex;gap:12px;padding:12px 16px;background:#0f172a;border-top:1px solid #334155;flex-wrap:wrap}
 .map-stat-item{font-size:11px;color:#94a3b8}
 .map-stat-item strong{color:#f97316}
-
-/* MAP LAYER TOGGLE */
-.layer-toggle{display:flex;gap:6px;padding:8px 16px;background:#0f172a;border-top:1px solid #334155;flex-wrap:wrap}
-.layer-btn{padding:4px 10px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid #334155;background:#1e293b;color:#94a3b8;font-family:inherit;transition:all .2s}
-.layer-btn.active{background:#f97316;color:#fff;border-color:#f97316}
-
-/* ROUTE */
-.route-panel{display:grid;grid-template-columns:1fr;background:#1e293b;border:1px solid #334155;border-radius:16px;overflow:hidden}
+.route-panel{display:grid;grid-template-columns:1fr;gap:0;background:#1e293b;border:1px solid #334155;border-radius:16px;overflow:hidden}
 @media(min-width:700px){.route-panel{grid-template-columns:260px 1fr}}
 .route-sidebar{padding:20px;border-bottom:1px solid #334155}
 @media(min-width:700px){.route-sidebar{border-bottom:none;border-right:1px solid #334155}}
@@ -170,6 +109,7 @@ a{color:inherit;text-decoration:none}
 .route-input{width:100%;padding:10px 12px;background:#0f172a;border:1px solid #334155;border-radius:8px;color:#e2e8f0;font-size:12px;font-family:inherit}
 .route-input:focus{outline:none;border-color:#f97316}
 .route-btn{width:100%;padding:10px;background:#f97316;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:12px}
+.route-btn:hover{background:#ea580c}
 .route-option{padding:10px;background:#0f172a;border:1px solid #334155;border-radius:10px;margin-bottom:8px}
 .route-option.recommended{border-color:#22c55e}
 .route-option h4{font-size:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
@@ -177,16 +117,13 @@ a{color:inherit;text-decoration:none}
 .route-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:600}
 .tag-safe{background:#22c55e20;color:#22c55e}
 .tag-risky{background:#ef444420;color:#ef4444}
-
-/* CIVIC DASHBOARD */
 .civic-container{max-width:1000px;margin:30px auto;padding:0 16px}
 .civic-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px}
 .civic-header h2{font-size:18px;font-weight:700}
 .civic-badge{background:#22c55e20;color:#22c55e;padding:4px 12px;border-radius:8px;font-size:11px;font-weight:600}
 .civic-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
 @media(min-width:600px){.civic-stats{grid-template-columns:repeat(4,1fr)}}
-.civic-stat{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;transition:all .2s}
-.civic-stat:hover{border-color:#f97316}
+.civic-stat{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px}
 .civic-stat .label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em}
 .civic-stat .value{font-size:24px;font-weight:700;font-family:monospace;margin-top:4px}
 .civic-stat .value.orange{color:#f97316}
@@ -201,34 +138,34 @@ table{width:100%;border-collapse:collapse;min-width:500px}
 th{text-align:left;padding:8px 14px;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.05em;font-weight:500;border-bottom:1px solid #334155}
 td{padding:10px 14px;font-size:12px;border-bottom:1px solid #0f172a}
 tr:hover td{background:#ffffff05}
-.bar-chart{display:flex;align-items:flex-end;gap:8px;height:160px;padding:16px}
+.priority-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600}
+.priority-critical{background:#ef444425;color:#ef4444}
+.priority-high{background:#f9731625;color:#f97316}
+.priority-medium{background:#eab30825;color:#eab308}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:140px;padding:16px}
 .bar-col{display:flex;flex-direction:column;align-items:center;flex:1}
-.bar{width:100%;max-width:40px;border-radius:4px 4px 0 0;transition:all .6s;min-height:4px}
+.bar{width:100%;max-width:36px;border-radius:4px 4px 0 0;transition:all .5s}
 .bar-label{font-size:9px;color:#64748b;margin-top:6px;text-align:center}
-.bar-value{font-size:11px;font-weight:700;margin-bottom:4px;font-family:monospace}
-
-/* TEAM FOOTER */
+.bar-value{font-size:10px;font-weight:600;margin-bottom:4px;font-family:monospace}
+.report-item{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:12px;margin-bottom:8px}
+.report-item .ri-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.report-item .ri-type{font-size:12px;font-weight:600}
+.report-item .ri-time{font-size:10px;color:#64748b}
+.report-item .ri-coords{font-size:11px;font-family:monospace;color:#94a3b8}
+.report-item .ri-desc{font-size:11px;color:#94a3b8;margin-top:4px}
+.report-item .ri-severity{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;margin-top:4px}
+.report-item .ri-photo{width:100%;max-height:120px;object-fit:cover;border-radius:6px;margin-top:8px}
+.report-item .delete-btn{background:#ef444420;color:#ef4444;border:none;padding:4px 10px;border-radius:6px;font-size:10px;cursor:pointer;font-family:inherit;margin-top:6px}
 .team-footer{text-align:center;padding:32px 16px;border-top:1px solid #334155;margin-top:32px}
 .team-footer h3{font-size:16px;font-weight:700;color:#f97316;margin-bottom:8px}
 .team-footer p{font-size:12px;color:#64748b}
 .team-members{display:flex;justify-content:center;gap:12px;margin-top:12px;flex-wrap:wrap}
 .member{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:500}
-
-/* UTILITY */
 .no-reports{text-align:center;padding:40px 20px;color:#64748b}
 .no-reports .big-icon{font-size:48px;margin-bottom:12px}
-.clear-btn,.export-btn{border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
-.clear-btn{background:#ef444420;color:#ef4444}
-.export-btn{background:#3b82f620;color:#3b82f6}
+.clear-btn{background:#ef444420;color:#ef4444;border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.export-btn{background:#3b82f620;color:#3b82f6;border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap}
-
-/* UNIQUE: LIVE CLOCK */
-.live-clock{position:fixed;bottom:16px;right:16px;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:6px 12px;font-size:10px;font-family:monospace;color:#f97316;z-index:999;display:flex;align-items:center;gap:6px}
-.live-clock .dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
-
-/* UNIQUE: SCROLL TO TOP */
-.scroll-top{position:fixed;bottom:16px;left:16px;background:#f97316;color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer;z-index:999;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px #f9731640}
-.scroll-top.show{display:flex}
 </style>
 </head>
 <body>
@@ -252,69 +189,45 @@ tr:hover td{background:#ffffff05}
   <div class="hero">
     <div class="hero-badge">🏆 Smart Move Hackathon — Team Spark</div>
     <h1>Report. Verify. <span>Navigate Safely.</span></h1>
-    <p>A crowd-sourced platform that turns commuter reports into verified hazard hotspots, live heatmaps, and safer routes for Coimbatore.</p>
+    <p>A crowd-sourced platform that turns commuter reports into verified hazard hotspots, live heatmaps, and safer routes.</p>
     <button class="submit-btn" style="width:auto;padding:12px 32px" id="heroReportBtn">⚡ Report a Hazard Now</button>
   </div>
   <div class="stats-row">
-    <div class="stat-card" data-goto="report"><div class="stat-value" id="stat-reports">0</div><div class="stat-label">Reports Filed</div></div>
-    <div class="stat-card" data-goto="heatmap"><div class="stat-value" id="stat-hotspots">0</div><div class="stat-label">Hazard Zones</div></div>
-    <div class="stat-card" data-goto="report"><div class="stat-value" id="stat-potholes">0</div><div class="stat-label">Potholes</div></div>
-    <div class="stat-card" data-goto="report"><div class="stat-value" id="stat-waterlog">0</div><div class="stat-label">Waterlogging</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-reports">0</div><div class="stat-label">Reports Filed</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-hotspots">0</div><div class="stat-label">Hazard Zones</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-potholes">0</div><div class="stat-label">Potholes</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-waterlog">0</div><div class="stat-label">Waterlogging</div></div>
   </div>
-
-  <!-- CLICKABLE FEATURE CARDS -->
   <div class="section">
-    <div class="section-title">✨ Tap Any Feature to Try It</div>
+    <div class="section-title">✨ Real Working Features</div>
     <div class="features-grid">
-      <div class="feature-card" data-goto="report" data-scroll="gpsBar">
-        <span class="tap-hint">TAP →</span>
-        <div class="feature-icon">📍</div><h3>Real GPS Capture</h3>
-        <p>Auto-captures your actual GPS with accuracy, speed & altitude data.</p>
-      </div>
-      <div class="feature-card" data-goto="report" data-scroll="photoArea">
-        <span class="tap-hint">TAP →</span>
-        <div class="feature-icon">📷</div><h3>Photo Evidence</h3>
-        <p>Camera, gallery or file upload with preview, size & metadata.</p>
-      </div>
-      <div class="feature-card" data-goto="heatmap">
-        <span class="tap-hint">TAP →</span>
-        <div class="feature-icon">🗺️</div><h3>Live Heatmap</h3>
-        <p>Real OpenStreetMap with heat layers, markers & cluster zones.</p>
-      </div>
-      <div class="feature-card" data-goto="report" data-scroll="reportListSection">
-        <span class="tap-hint">TAP →</span>
-        <div class="feature-icon">💾</div><h3>Saved Reports</h3>
-        <p>Filter, search & export — persists after closing browser.</p>
-      </div>
-      <div class="feature-card" data-goto="civic">
-        <span class="tap-hint">TAP →</span>
-        <div class="feature-icon">🏛️</div><h3>Civic Dashboard</h3>
-        <p>Live stats, charts & tables auto-update from real reports.</p>
-      </div>
-      <div class="feature-card" data-goto="route">
-        <span class="tap-hint">TAP →</span>
-        <div class="feature-icon">🛣️</div><h3>Safe Routing</h3>
-        <p>Smart route suggestions avoiding high-hazard zones.</p>
-      </div>
+      <div class="feature-card"><div class="feature-icon">📍</div><h3>Real GPS Capture</h3><p>Auto-captures your actual GPS coordinates when reporting.</p></div>
+      <div class="feature-card"><div class="feature-icon">📷</div><h3>Photo Evidence</h3><p>Camera capture or gallery upload with live preview.</p></div>
+      <div class="feature-card"><div class="feature-icon">🗺️</div><h3>Live Map</h3><p>Real OpenStreetMap with hazard markers and heat zones.</p></div>
+      <div class="feature-card"><div class="feature-icon">💾</div><h3>Saved Reports</h3><p>All reports saved locally — persists after closing browser.</p></div>
+      <div class="feature-card"><div class="feature-icon">🏛️</div><h3>Live Dashboard</h3><p>Stats and charts update automatically from real reports.</p></div>
     </div>
   </div>
-
   <div class="section">
     <div class="section-title">🛠️ Tech Stack</div>
-    <div class="features-grid" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr))">
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">🌍</div><h3>Leaflet.js</h3><p>Maps</p></div>
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">📍</div><h3>Geolocation</h3><p>GPS</p></div>
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">💾</div><h3>LocalStorage</h3><p>Persistence</p></div>
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">📷</div><h3>MediaDevices</h3><p>Camera</p></div>
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">🗺️</div><h3>OpenStreetMap</h3><p>Tiles</p></div>
-      <div class="feature-card" style="text-align:center"><div class="feature-icon">🔥</div><h3>Heatmap.js</h3><p>Density</p></div>
+    <div class="features-grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">🌍</div><h3>Leaflet.js</h3><p>Interactive Maps</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">📍</div><h3>Geolocation API</h3><p>Real GPS</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">💾</div><h3>LocalStorage</h3><p>Data Persistence</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">📷</div><h3>MediaDevices API</h3><p>Camera Access</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">🗺️</div><h3>OpenStreetMap</h3><p>Free Map Tiles</p></div>
+      <div class="feature-card" style="text-align:center"><div class="feature-icon">🔥</div><h3>Heatmap Layer</h3><p>Density Viz</p></div>
     </div>
   </div>
-
   <div class="team-footer">
     <h3>Team Spark 🔥</h3>
     <p>SNS College of Technology — SMART MOVE Hackathon @ KIT Coimbatore</p>
-    <div class="team-members"><div class="member">Haris M S</div><div class="member">Logavinayaga V</div><div class="member">Srihari V</div><div class="member">Ranjeth P</div></div>
+    <div class="team-members">
+      <div class="member">Haris M S</div>
+      <div class="member">Logavinayaga V</div>
+      <div class="member">Srihari V</div>
+      <div class="member">Ranjeth P</div>
+    </div>
   </div>
 </div>
 
@@ -324,84 +237,78 @@ tr:hover td{background:#ffffff05}
     <div class="phone-frame">
       <div class="phone-notch"></div>
       <div class="report-header"><h2>⚠️ Report a Hazard</h2><p>Your report helps make roads safer</p></div>
-
       <div class="form-group">
         <div class="form-label">Hazard Type</div>
-        <div class="hazard-types">
+        <div class="hazard-types" id="hazardTypes">
           <div class="hazard-option" data-type="Pothole"><span class="icon">🕳️</span>Pothole</div>
           <div class="hazard-option" data-type="Waterlogging"><span class="icon">🌊</span>Waterlogging</div>
           <div class="hazard-option" data-type="Accident Spot"><span class="icon">⚠️</span>Accident Spot</div>
         </div>
       </div>
-
       <div class="form-group">
         <div class="form-label">Severity Level</div>
         <input type="range" min="1" max="5" value="3" class="severity-slider" id="severitySlider">
         <div class="severity-labels"><span>Low</span><span>Medium</span><span>High</span><span>Critical</span><span>Extreme</span></div>
         <div style="text-align:center"><span class="severity-value" id="severityDisplay" style="background:#f9731625;color:#f97316">⚡ Medium</span></div>
       </div>
-
-      <!-- ENHANCED GPS -->
       <div class="gps-bar" id="gpsBar">
         <div class="gps-dot loading" id="gpsDot"></div>
-        <div><div class="gps-text" id="gpsStatus">📡 Tap to fetch location...</div><div class="gps-coords" id="gpsCoords">Waiting for GPS...</div></div>
-      </div>
-      <div class="gps-details" id="gpsDetails" style="display:none">
-        <div class="gps-detail-card"><div class="gd-val" id="gpsAccuracy">--</div><div class="gd-label">Accuracy (m)</div></div>
-        <div class="gps-detail-card"><div class="gd-val" id="gpsAltitude">--</div><div class="gd-label">Altitude (m)</div></div>
-        <div class="gps-detail-card"><div class="gd-val" id="gpsSpeed">--</div><div class="gd-label">Speed (km/h)</div></div>
+        <div>
+          <div class="gps-text" id="gpsStatus">📡 Tap to fetch location...</div>
+          <div class="gps-coords" id="gpsCoords">Waiting for GPS...</div>
+        </div>
       </div>
       <div id="reportMiniMap"></div>
-
       <div class="form-group">
         <div class="form-label">Description (Optional)</div>
         <textarea class="form-input" id="reportDesc" rows="2" placeholder="e.g., Large pothole near bus stop..."></textarea>
       </div>
-
-      <!-- ENHANCED PHOTO -->
-      <div class="form-group" id="photoArea">
+      <div class="form-group">
         <div class="form-label">📸 Attach Photo Evidence</div>
-        <div class="photo-upload-area">
+        <div class="photo-upload-area" id="photoArea">
           <div class="photo-trigger" id="photoTrigger">
-            <div class="cam-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+            <div class="cam-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
             <div class="cam-text">Tap to Add Photo</div>
-            <div class="cam-sub">Camera, gallery or files</div>
+            <div class="cam-sub">Camera capture or upload from gallery</div>
           </div>
           <div class="photo-options" id="photoOptions">
-            <div class="photo-option-btn" id="btnCamera"><div class="opt-icon" style="background:#3b82f620">📷</div><div class="opt-text"><h4>Open Camera</h4><p>Take a live photo</p></div></div>
-            <div class="photo-option-btn" id="btnGallery"><div class="opt-icon" style="background:#8b5cf620">🖼️</div><div class="opt-text"><h4>Choose from Gallery</h4><p>Select existing photo</p></div></div>
-            <div class="photo-option-btn" id="btnFile"><div class="opt-icon" style="background:#22c55e20">📁</div><div class="opt-text"><h4>Browse Files</h4><p>Upload image file</p></div></div>
+            <div class="photo-option-btn" id="btnCamera">
+              <div class="opt-icon" style="background:#3b82f620">📷</div>
+              <div class="opt-text"><h4>Open Camera</h4><p>Take a live photo of the hazard</p></div>
+            </div>
+            <div class="photo-option-btn" id="btnGallery">
+              <div class="opt-icon" style="background:#8b5cf620">🖼️</div>
+              <div class="opt-text"><h4>Choose from Gallery</h4><p>Select an existing photo</p></div>
+            </div>
+            <div class="photo-option-btn" id="btnFile">
+              <div class="opt-icon" style="background:#22c55e20">📁</div>
+              <div class="opt-text"><h4>Browse Files</h4><p>Upload any image file</p></div>
+            </div>
           </div>
           <div class="photo-preview" id="photoPreview">
             <img id="previewImg" src="" alt="Preview">
-            <div class="photo-meta"><span id="photoName">photo.jpg</span><span id="photoSize">0 KB</span></div>
-            <div class="preview-info">✓ Photo attached</div>
-            <button class="remove-btn" id="removePhotoBtn">✕ Remove</button>
+            <div class="preview-info">✓ Photo attached successfully</div>
+            <button class="remove-btn" id="removePhotoBtn">✕ Remove Photo</button>
           </div>
         </div>
         <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
         <input type="file" id="galleryInput" accept="image/*" style="display:none">
         <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" style="display:none">
       </div>
-
       <div style="background:#0f172a;border:1px solid #334155;border-radius:10px;padding:8px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px">
-        <span>🕐</span><span style="font-size:11px;color:#94a3b8">Timestamp:</span><span style="font-size:12px;font-family:monospace" id="timestamp"></span>
+        <span style="font-size:14px">🕐</span>
+        <span style="font-size:11px;color:#94a3b8">Timestamp:</span>
+        <span style="font-size:12px;font-family:monospace" id="timestamp"></span>
       </div>
-
       <button class="submit-btn" id="submitBtn">🚀 Submit Report</button>
       <div class="toast" id="toast"></div>
-
-      <!-- ENHANCED REPORT LIST -->
-      <div style="margin-top:24px;border-top:1px solid #334155;padding-top:16px" id="reportListSection">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div class="form-label" style="margin:0">📋 Saved Reports (<span id="reportCount">0</span>)</div>
-          <div class="btn-row"><button class="export-btn" id="exportBtn" style="display:none">📤 Export</button><button class="clear-btn" id="clearBtn" style="display:none">🗑️ Clear</button></div>
-        </div>
-        <div class="report-filter" id="reportFilter" style="display:none">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="Pothole">🕳️ Potholes</button>
-          <button class="filter-btn" data-filter="Waterlogging">🌊 Water</button>
-          <button class="filter-btn" data-filter="Accident Spot">⚠️ Accident</button>
+      <div style="margin-top:24px;border-top:1px solid #334155;padding-top:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="form-label" style="margin:0">📋 Your Saved Reports (<span id="reportCount">0</span>)</div>
+          <div class="btn-row">
+            <button class="export-btn" id="exportBtn" style="display:none">📤 Export</button>
+            <button class="clear-btn" id="clearBtn" style="display:none">🗑️ Clear</button>
+          </div>
         </div>
         <div id="reportList"></div>
       </div>
@@ -415,25 +322,18 @@ tr:hover td{background:#ffffff05}
     <h2>🗺️ Live Hazard Heatmap</h2>
     <div class="map-wrapper">
       <div class="map-toolbar">
-        <h3>Real-Time Map</h3>
+        <h3>Real-Time Reports Map</h3>
         <div class="map-legend">
           <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Pothole</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Water</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Waterlogging</div>
           <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>Accident</div>
           <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>You</div>
         </div>
       </div>
       <div id="heatmap"></div>
-      <div class="layer-toggle">
-        <button class="layer-btn active" data-layer="heat">🔥 Heat</button>
-        <button class="layer-btn active" data-layer="markers">📍 Markers</button>
-        <button class="layer-btn active" data-layer="clusters">🔴 Clusters</button>
-      </div>
       <div class="map-stats">
         <div class="map-stat-item">📍 Reports: <strong id="mapReportCount">0</strong></div>
         <div class="map-stat-item">🔥 Zones: <strong id="mapZoneCount">0</strong></div>
-        <div class="map-stat-item">📏 Radius: <strong>500m</strong></div>
-        <div class="map-stat-item">⏱️ Window: <strong>48h</strong></div>
       </div>
     </div>
   </div>
@@ -450,8 +350,15 @@ tr:hover td{background:#ffffff05}
         <div class="route-input-group"><label>To</label><input class="route-input" id="routeTo" placeholder="Enter destination..."></div>
         <button class="route-btn" id="routeBtn">🔍 Find Safe Route</button>
         <div style="margin-top:12px">
-          <div class="route-option recommended"><h4><span style="color:#22c55e">Safe Route</span><span class="route-tag tag-safe">✓ RECOMMENDED</span></h4><p>Avoids all hazard zones</p><p style="color:#22c55e;font-size:10px;margin-top:4px" id="routeHazardInfo">0 hazard zones detected</p></div>
-          <div class="route-option"><h4><span>Direct Route</span><span class="route-tag tag-risky">⚠ RISKY</span></h4><p>Shortest path — may pass hazard zones</p></div>
+          <div class="route-option recommended">
+            <h4><span style="color:#22c55e">Safe Route</span><span class="route-tag tag-safe">✓ RECOMMENDED</span></h4>
+            <p>Avoids all reported hazard zones</p>
+            <p style="color:#22c55e;font-size:10px;margin-top:4px" id="routeHazardInfo">0 hazard zones detected</p>
+          </div>
+          <div class="route-option">
+            <h4><span>Direct Route</span><span class="route-tag tag-risky">⚠ RISKY</span></h4>
+            <p>Shortest path — may pass through hazard zones</p>
+          </div>
         </div>
       </div>
       <div id="routemap"></div>
@@ -459,10 +366,13 @@ tr:hover td{background:#ffffff05}
   </div>
 </div>
 
-<!-- DASHBOARD -->
+<!-- CIVIC DASHBOARD -->
 <div class="page" id="page-civic">
   <div class="civic-container">
-    <div class="civic-header"><h2>🏛️ Civic Dashboard</h2><div class="civic-badge">🟢 Live — <span id="civicTime"></span></div></div>
+    <div class="civic-header">
+      <h2>🏛️ Civic Dashboard</h2>
+      <div class="civic-badge">🟢 Live Data</div>
+    </div>
     <div class="civic-stats">
       <div class="civic-stat"><div class="label">Total Reports</div><div class="value orange" id="civic-total">0</div></div>
       <div class="civic-stat"><div class="label">Potholes</div><div class="value red" id="civic-potholes">0</div></div>
@@ -471,229 +381,415 @@ tr:hover td{background:#ffffff05}
     </div>
     <div class="civic-table">
       <div class="civic-table-header"><h3>📊 Reports by Type</h3></div>
-      <div class="bar-chart">
-        <div class="bar-col"><div class="bar-value" id="bv1" style="color:#ef4444">0</div><div class="bar" id="b1" style="height:4px;background:linear-gradient(to top,#ef4444,#f97316)"></div><div class="bar-label">Potholes</div></div>
-        <div class="bar-col"><div class="bar-value" id="bv2" style="color:#3b82f6">0</div><div class="bar" id="b2" style="height:4px;background:linear-gradient(to top,#3b82f6,#22c55e)"></div><div class="bar-label">Waterlogging</div></div>
-        <div class="bar-col"><div class="bar-value" id="bv3" style="color:#f97316">0</div><div class="bar" id="b3" style="height:4px;background:linear-gradient(to top,#f97316,#eab308)"></div><div class="bar-label">Accidents</div></div>
+      <div class="bar-chart" id="barChart">
+        <div class="bar-col"><div class="bar-value" id="bar-val-1" style="color:#ef4444">0</div><div class="bar" id="bar-1" style="height:10px;background:linear-gradient(to top,#ef4444,#f97316)"></div><div class="bar-label">Potholes</div></div>
+        <div class="bar-col"><div class="bar-value" id="bar-val-2" style="color:#3b82f6">0</div><div class="bar" id="bar-2" style="height:10px;background:linear-gradient(to top,#3b82f6,#22c55e)"></div><div class="bar-label">Waterlogging</div></div>
+        <div class="bar-col"><div class="bar-value" id="bar-val-3" style="color:#f97316">0</div><div class="bar" id="bar-3" style="height:10px;background:linear-gradient(to top,#f97316,#eab308)"></div><div class="bar-label">Accidents</div></div>
       </div>
     </div>
     <div class="civic-table">
-      <div class="civic-table-header"><h3>📋 All Reports</h3><button class="export-btn" id="civicExportBtn">📤 Export CSV</button></div>
+      <div class="civic-table-header">
+        <h3>📋 All Hazard Reports</h3>
+        <button class="export-btn" id="civicExportBtn">📤 Export CSV</button>
+      </div>
       <div class="table-scroll">
-        <table><thead><tr><th>#</th><th>Type</th><th>Severity</th><th>Location</th><th>Time</th><th>Desc</th></tr></thead>
-        <tbody id="civicTableBody"><tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px">No reports yet!</td></tr></tbody></table>
+        <table>
+          <thead><tr><th>#</th><th>Type</th><th>Severity</th><th>Location</th><th>Time</th><th>Description</th></tr></thead>
+          <tbody id="civicTableBody">
+            <tr><td colspan="6" style="text-align:center;color:#64748b;padding:24px">No reports yet. Go to Report tab to add hazards!</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="civic-table">
-      <div class="civic-table-header"><h3>🔬 DBSCAN Verification</h3></div>
+      <div class="civic-table-header"><h3>🔬 DBSCAN Verification Engine</h3></div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px">
-        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">500m</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Radius (ε)</div></div>
+        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">500m</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Cluster Radius (ε)</div></div>
         <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">3+</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Min Reports</div></div>
-        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">48h</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Window</div></div>
+        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:700;color:#f97316;font-family:monospace">48h</div><div style="font-size:10px;color:#94a3b8;margin-top:4px">Time Window</div></div>
       </div>
-      <p style="font-size:11px;color:#64748b;padding:0 16px 16px;text-align:center">Hotspot confirmed after 3+ reports within 500m in 48h.</p>
+      <p style="font-size:11px;color:#64748b;padding:0 16px 16px;text-align:center">Hotspot confirmed after 3+ distinct users report within 500m in 48 hours.</p>
     </div>
   </div>
 </div>
-
-<!-- LIVE CLOCK -->
-<div class="live-clock"><div class="dot"></div><span id="liveClock"></span></div>
-<button class="scroll-top" id="scrollTop">↑</button>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 <script>
 (function(){
-var currentLat=null,currentLng=null,selectedHazard=null,photoData=null,photoMeta={};
-var heatmapObj=null,routemapObj=null,miniMapObj=null,miniMarker=null;
-var heatLayer=null,markerLayer=null,clusterLayer=null;
-var currentFilter='all';
-var reports=[];
-try{reports=JSON.parse(localStorage.getItem('roadguard_reports')||'[]')}catch(e){reports=[]}
+  // ===== STATE =====
+  var currentLat = null, currentLng = null, selectedHazard = null, photoData = null;
+  var heatmapObj = null, routemapObj = null, miniMapObj = null, miniMarker = null;
+  var reports = [];
+  try { reports = JSON.parse(localStorage.getItem('roadguard_reports') || '[]'); } catch(e) { reports = []; }
 
-// NAV
-var navBtns=document.querySelectorAll('.nav-links button');
-function goToPage(page,scrollTo){
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
-  document.getElementById('page-'+page).classList.add('active');
-  navBtns.forEach(function(b){b.classList.remove('active')});
-  for(var i=0;i<navBtns.length;i++){if(navBtns[i].getAttribute('data-page')===page)navBtns[i].classList.add('active')}
-  window.scrollTo(0,0);
-  if(page==='heatmap')setTimeout(initHeatmap,200);
-  if(page==='route')setTimeout(initRouteMap,200);
-  if(page==='home')updateHomeStats();
-  if(page==='civic')updateCivicDashboard();
-  if(page==='report'){getLocation();updateReportList();updateTimestamp();setTimeout(initMiniMap,300);
-    if(scrollTo)setTimeout(function(){var el=document.getElementById(scrollTo);if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},500);
-  }
-}
-navBtns.forEach(function(btn){btn.addEventListener('click',function(){goToPage(this.getAttribute('data-page'))})});
-document.getElementById('heroReportBtn').addEventListener('click',function(){goToPage('report')});
-
-// CLICKABLE FEATURE CARDS & STAT CARDS
-document.querySelectorAll('.feature-card[data-goto],.stat-card[data-goto]').forEach(function(card){
-  card.addEventListener('click',function(){goToPage(this.getAttribute('data-goto'),this.getAttribute('data-scroll'))});
-});
-
-// SCROLL TO TOP
-var scrollBtn=document.getElementById('scrollTop');
-window.addEventListener('scroll',function(){scrollBtn.classList.toggle('show',window.scrollY>300)});
-scrollBtn.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
-
-// LIVE CLOCK
-function updateClock(){
-  var now=new Date();
-  document.getElementById('liveClock').textContent=now.toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  var ct=document.getElementById('civicTime');if(ct)ct.textContent=now.toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit'});
-}
-setInterval(updateClock,1000);updateClock();
-
-// GPS - ENHANCED
-function getLocation(){
-  var dot=document.getElementById('gpsDot'),st=document.getElementById('gpsStatus'),co=document.getElementById('gpsCoords');
-  dot.className='gps-dot loading';st.textContent='📡 Fetching location...';co.textContent='Acquiring satellites...';
-  document.getElementById('gpsDetails').style.display='none';
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(function(pos){
-      currentLat=pos.coords.latitude;currentLng=pos.coords.longitude;
-      dot.className='gps-dot active';st.textContent='✅ GPS Locked — High Accuracy';
-      co.textContent=currentLat.toFixed(6)+'° N, '+currentLng.toFixed(6)+'° E';
-      // Show details
-      document.getElementById('gpsDetails').style.display='grid';
-      document.getElementById('gpsAccuracy').textContent=pos.coords.accuracy?pos.coords.accuracy.toFixed(1):'--';
-      document.getElementById('gpsAltitude').textContent=pos.coords.altitude?pos.coords.altitude.toFixed(1):'--';
-      document.getElementById('gpsSpeed').textContent=pos.coords.speed?(pos.coords.speed*3.6).toFixed(1):'0.0';
-      updateMiniMap();
-    },function(err){
-      dot.className='gps-dot error';
-      st.textContent='⚠️ Default location (tap retry)';
-      co.textContent='11.0168° N, 76.9558° E (Coimbatore)';
-      currentLat=11.0168;currentLng=76.9558;
-      document.getElementById('gpsDetails').style.display='grid';
-      document.getElementById('gpsAccuracy').textContent='~50';
-      document.getElementById('gpsAltitude').textContent='411';
-      document.getElementById('gpsSpeed').textContent='0.0';
-      updateMiniMap();
-    },{enableHighAccuracy:true,timeout:15000,maximumAge:0});
-  }else{
-    dot.className='gps-dot error';st.textContent='❌ GPS not supported';
-    co.textContent='11.0168° N, 76.9558° E';currentLat=11.0168;currentLng=76.9558;updateMiniMap();
-  }
-}
-document.getElementById('gpsBar').addEventListener('click',getLocation);
-
-// MINI MAP
-function initMiniMap(){
-  if(miniMapObj){miniMapObj.remove();miniMapObj=null}
-  var la=currentLat||11.0168,ln=currentLng||76.9558;
-  miniMapObj=L.map('reportMiniMap',{zoomControl:false,attributionControl:false}).setView([la,ln],16);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(miniMapObj);
-  miniMarker=L.marker([la,ln]).addTo(miniMapObj).bindPopup('📍 You are here');
-  L.circle([la,ln],{radius:50,color:'#f97316',fillColor:'#f97316',fillOpacity:.1,weight:1}).addTo(miniMapObj);
-  setTimeout(function(){miniMapObj.invalidateSize()},100);
-}
-function updateMiniMap(){
-  if(miniMapObj&&currentLat){miniMapObj.setView([currentLat,currentLng],16);if(miniMarker)miniMarker.setLatLng([currentLat,currentLng])}
-}
-
-// SEVERITY
-var sevSlider=document.getElementById('severitySlider');
-function updateSeverity(){
-  var v=sevSlider.value,d=document.getElementById('severityDisplay');
-  var l=['🟢 Low','🟡 Moderate','⚡ Medium','🔴 High','💀 Critical'];
-  var c=['#22c55e','#eab308','#f97316','#ef4444','#dc2626'];
-  d.textContent=l[v-1];d.style.color=c[v-1];d.style.background=c[v-1]+'25';
-}
-sevSlider.addEventListener('input',updateSeverity);
-
-// HAZARD
-document.querySelectorAll('.hazard-option').forEach(function(el){
-  el.addEventListener('click',function(){
-    document.querySelectorAll('.hazard-option').forEach(function(o){o.classList.remove('selected')});
-    this.classList.add('selected');selectedHazard=this.getAttribute('data-type');
+  // ===== NAVIGATION =====
+  var navBtns = document.querySelectorAll('.nav-links button');
+  navBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var page = this.getAttribute('data-page');
+      document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+      document.getElementById('page-' + page).classList.add('active');
+      navBtns.forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      onPageShow(page);
+    });
   });
-});
 
-// PHOTO - ENHANCED
-document.getElementById('photoTrigger').addEventListener('click',function(){document.getElementById('photoOptions').classList.toggle('show')});
-document.getElementById('btnCamera').addEventListener('click',function(){document.getElementById('cameraInput').click()});
-document.getElementById('btnGallery').addEventListener('click',function(){document.getElementById('galleryInput').click()});
-document.getElementById('btnFile').addEventListener('click',function(){document.getElementById('fileInput').click()});
-function handlePhoto(input){
-  if(input.files&&input.files[0]){
-    var file=input.files[0];
-    photoMeta={name:file.name,size:(file.size/1024).toFixed(1)+' KB',type:file.type};
-    var r=new FileReader();
-    r.onload=function(e){
-      photoData=e.target.result;
-      document.getElementById('previewImg').src=photoData;
-      document.getElementById('photoName').textContent=photoMeta.name;
-      document.getElementById('photoSize').textContent=photoMeta.size;
-      document.getElementById('photoPreview').classList.add('show');
-      document.getElementById('photoTrigger').style.display='none';
-      document.getElementById('photoOptions').classList.remove('show');
-    };r.readAsDataURL(file);
+  // Hero button
+  document.getElementById('heroReportBtn').addEventListener('click', function() {
+    navBtns.forEach(function(b) { b.classList.remove('active'); });
+    navBtns[1].classList.add('active');
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    document.getElementById('page-report').classList.add('active');
+    onPageShow('report');
+  });
+
+  function onPageShow(page) {
+    if (page === 'heatmap') setTimeout(initHeatmap, 150);
+    if (page === 'route') setTimeout(initRouteMap, 150);
+    if (page === 'home') updateHomeStats();
+    if (page === 'civic') updateCivicDashboard();
+    if (page === 'report') { getLocation(); updateReportList(); updateTimestamp(); setTimeout(initMiniMap, 200); }
   }
-}
-document.getElementById('cameraInput').addEventListener('change',function(){handlePhoto(this)});
-document.getElementById('galleryInput').addEventListener('change',function(){handlePhoto(this)});
-document.getElementById('fileInput').addEventListener('change',function(){handlePhoto(this)});
-function removePhoto(){
-  photoData=null;photoMeta={};
-  document.getElementById('photoPreview').classList.remove('show');
-  document.getElementById('photoTrigger').style.display='flex';
-  document.getElementById('cameraInput').value='';document.getElementById('galleryInput').value='';document.getElementById('fileInput').value='';
-}
-document.getElementById('removePhotoBtn').addEventListener('click',removePhoto);
 
-// TIMESTAMP
-function updateTimestamp(){document.getElementById('timestamp').textContent=new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})}
-setInterval(updateTimestamp,1000);updateTimestamp();
+  // ===== GPS =====
+  function getLocation() {
+    var dot = document.getElementById('gpsDot');
+    var status = document.getElementById('gpsStatus');
+    var coords = document.getElementById('gpsCoords');
+    dot.className = 'gps-dot loading';
+    status.textContent = '📡 Fetching your location...';
+    coords.textContent = 'Waiting for GPS...';
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        currentLat = pos.coords.latitude;
+        currentLng = pos.coords.longitude;
+        dot.className = 'gps-dot active';
+        status.textContent = '✅ GPS Location Captured';
+        coords.textContent = currentLat.toFixed(6) + '° N, ' + currentLng.toFixed(6) + '° E';
+        updateMiniMap();
+      }, function() {
+        dot.className = 'gps-dot error';
+        status.textContent = '⚠️ Using default (tap to retry)';
+        coords.textContent = '11.0168° N, 76.9558° E (Coimbatore)';
+        currentLat = 11.0168; currentLng = 76.9558;
+        updateMiniMap();
+      }, { enableHighAccuracy: true, timeout: 10000 });
+    } else {
+      dot.className = 'gps-dot error';
+      status.textContent = '❌ GPS not supported';
+      coords.textContent = '11.0168° N, 76.9558° E';
+      currentLat = 11.0168; currentLng = 76.9558;
+      updateMiniMap();
+    }
+  }
 
-// SUBMIT
-document.getElementById('submitBtn').addEventListener('click',function(){
-  var btn=this;
-  if(!selectedHazard){showToast('❌ Select a hazard type!','error');return}
-  if(!currentLat){showToast('❌ Tap GPS bar to get location','error');return}
-  btn.classList.add('submitting');btn.textContent='⏳ Submitting...';
-  setTimeout(function(){
-    var sev=parseInt(sevSlider.value);
-    var sevLabels=['Low','Moderate','Medium','High','Critical'];
-    var rpt={id:Date.now(),type:selectedHazard,lat:currentLat+(Math.random()-.5)*.002,lng:currentLng+(Math.random()-.5)*.002,severity:sev,severityLabel:sevLabels[sev-1],description:document.getElementById('reportDesc').value,photo:photoData,photoMeta:photoMeta,timestamp:new Date().toISOString(),displayTime:new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})};
-    reports.push(rpt);saveReports();
-    selectedHazard=null;photoData=null;photoMeta={};
-    document.querySelectorAll('.hazard-option').forEach(function(o){o.classList.remove('selected')});
-    document.getElementById('reportDesc').value='';sevSlider.value=3;updateSeverity();removePhoto();
-    btn.classList.remove('submitting');btn.textContent='🚀 Submit Report';
-    showToast('✅ Report #'+reports.length+' saved! View on Heatmap 🗺️','success');
+  document.getElementById('gpsBar').addEventListener('click', getLocation);
+
+  // ===== MINI MAP =====
+  function initMiniMap() {
+    if (miniMapObj) { miniMapObj.remove(); miniMapObj = null; }
+    var lat = currentLat || 11.0168, lng = currentLng || 76.9558;
+    miniMapObj = L.map('reportMiniMap', { zoomControl: false, attributionControl: false }).setView([lat, lng], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(miniMapObj);
+    miniMarker = L.marker([lat, lng]).addTo(miniMapObj).bindPopup('📍 Report Location');
+    setTimeout(function() { miniMapObj.invalidateSize(); }, 100);
+  }
+
+  function updateMiniMap() {
+    if (miniMapObj && currentLat && currentLng) {
+      miniMapObj.setView([currentLat, currentLng], 15);
+      if (miniMarker) miniMarker.setLatLng([currentLat, currentLng]);
+    }
+  }
+
+  // ===== SEVERITY =====
+  var severitySlider = document.getElementById('severitySlider');
+  severitySlider.addEventListener('input', updateSeverity);
+  function updateSeverity() {
+    var val = severitySlider.value;
+    var display = document.getElementById('severityDisplay');
+    var levels = ['🟢 Low', '🟡 Moderate', '⚡ Medium', '🔴 High', '💀 Critical'];
+    var colors = ['#22c55e', '#eab308', '#f97316', '#ef4444', '#dc2626'];
+    display.textContent = levels[val - 1];
+    display.style.color = colors[val - 1];
+    display.style.background = colors[val - 1] + '25';
+  }
+
+  // ===== HAZARD SELECTION =====
+  document.querySelectorAll('.hazard-option').forEach(function(el) {
+    el.addEventListener('click', function() {
+      document.querySelectorAll('.hazard-option').forEach(function(o) { o.classList.remove('selected'); });
+      this.classList.add('selected');
+      selectedHazard = this.getAttribute('data-type');
+    });
+  });
+
+  // ===== PHOTO =====
+  document.getElementById('photoTrigger').addEventListener('click', function() {
+    document.getElementById('photoOptions').classList.toggle('show');
+  });
+  document.getElementById('btnCamera').addEventListener('click', function() { document.getElementById('cameraInput').click(); });
+  document.getElementById('btnGallery').addEventListener('click', function() { document.getElementById('galleryInput').click(); });
+  document.getElementById('btnFile').addEventListener('click', function() { document.getElementById('fileInput').click(); });
+
+  function handlePhoto(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        photoData = e.target.result;
+        document.getElementById('previewImg').src = photoData;
+        document.getElementById('photoPreview').classList.add('show');
+        document.getElementById('photoTrigger').style.display = 'none';
+        document.getElementById('photoOptions').classList.remove('show');
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  document.getElementById('cameraInput').addEventListener('change', function() { handlePhoto(this); });
+  document.getElementById('galleryInput').addEventListener('change', function() { handlePhoto(this); });
+  document.getElementById('fileInput').addEventListener('change', function() { handlePhoto(this); });
+
+  function removePhoto() {
+    photoData = null;
+    document.getElementById('photoPreview').classList.remove('show');
+    document.getElementById('photoTrigger').style.display = 'flex';
+    document.getElementById('cameraInput').value = '';
+    document.getElementById('galleryInput').value = '';
+    document.getElementById('fileInput').value = '';
+  }
+  document.getElementById('removePhotoBtn').addEventListener('click', removePhoto);
+
+  // ===== TIMESTAMP =====
+  function updateTimestamp() {
+    document.getElementById('timestamp').textContent = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+  }
+  setInterval(updateTimestamp, 1000);
+  updateTimestamp();
+
+  // ===== SUBMIT =====
+  document.getElementById('submitBtn').addEventListener('click', function() {
+    if (!selectedHazard) { showToast('❌ Please select a hazard type!', 'error'); return; }
+    if (!currentLat) { showToast('❌ Waiting for GPS — tap GPS bar to retry', 'error'); return; }
+
+    var severity = parseInt(severitySlider.value);
+    var severityLabels = ['Low', 'Moderate', 'Medium', 'High', 'Critical'];
+
+    var report = {
+      id: Date.now(),
+      type: selectedHazard,
+      lat: currentLat + (Math.random() - 0.5) * 0.002,
+      lng: currentLng + (Math.random() - 0.5) * 0.002,
+      severity: severity,
+      severityLabel: severityLabels[severity - 1],
+      description: document.getElementById('reportDesc').value,
+      photo: photoData,
+      timestamp: new Date().toISOString(),
+      displayTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    };
+
+    reports.push(report);
+    saveReports();
+
+    // Reset form
+    selectedHazard = null;
+    photoData = null;
+    document.querySelectorAll('.hazard-option').forEach(function(o) { o.classList.remove('selected'); });
+    document.getElementById('reportDesc').value = '';
+    severitySlider.value = 3;
+    updateSeverity();
+    removePhoto();
+
+    showToast('✅ Report #' + reports.length + ' saved! View on Heatmap 🗺️', 'success');
     updateReportList();
-  },800);
-});
-function showToast(m,t){var el=document.getElementById('toast');el.className='toast '+t;el.textContent=m;setTimeout(function(){el.className='toast'},4000)}
-function saveReports(){
-  try{var s=reports.map(function(r){var c={};for(var k in r)c[k]=r[k];if(c.photo&&c.photo.length>50000)c.photo=c.photo.substring(0,50000);return c});localStorage.setItem('roadguard_reports',JSON.stringify(s))}
-  catch(e){var n=reports.map(function(r){var c={};for(var k in r)c[k]=r[k];c.photo=null;return c});localStorage.setItem('roadguard_reports',JSON.stringify(n))}
-}
-
-// REPORT FILTER
-document.querySelectorAll('.filter-btn').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});
-    this.classList.add('active');currentFilter=this.getAttribute('data-filter');updateReportList();
   });
-});
 
-// REPORT LIST - ENHANCED
-function updateReportList(){
-  var list=document.getElementById('reportList'),cb=document.getElementById('clearBtn'),eb=document.getElementById('exportBtn'),rf=document.getElementById('reportFilter');
-  document.getElementById('reportCount').textContent=reports.length;
-  if(!reports.length){list.innerHTML='<div class="no-reports"><div class="big-icon">📭</div><p>No reports yet!</p></div>';cb.style.display='none';eb.style.display='none';rf.style.display='none';return}
-  cb.style.display='inline-block';eb.style.display='inline-block';rf.style.display='flex';
-  var icons={'Pothole':'🕳️','Waterlogging':'🌊','Accident Spot':'⚠️'};
-  var sc={'Low':'#22c55e','Moderate':'#eab308','Medium':'#f97316','High':'#ef4444','Critical':'#dc2626'};
-  var filtered=currentFilter==='all'?reports:reports.filter(function(r){return r.type===currentFilter});
-  var h='';
-  for(var i=filtered.length-1;i>=0;i--){var r=filtered[i];var c=sc[r.severityLabel]||'#f97316';
-    h+='<div class="report-item"><div class="ri-header"><span class="ri-type">'+(icons[r.type]||'📍')+' '+r.type+'</span><span class="ri-time">'+r.displayTime+'</span></div>';
-    h+='<div class="ri-coords">📍 '+r.lat.toFixed(6)+'°N, '+r.lng.toFixed(6)+'°E</div>';
-    if(
+  function showToast(msg, type) {
+    var toast = document.getElementById('toast');
+    toast.className = 'toast ' + type;
+    toast.textContent = msg;
+    setTimeout(function() { toast.className = 'toast'; }, 4000);
+  }
+
+  function saveReports() {
+    try {
+      var toSave = reports.map(function(r) {
+        var c = {}; for (var k in r) c[k] = r[k];
+        if (c.photo && c.photo.length > 50000) c.photo = c.photo.substring(0, 50000);
+        return c;
+      });
+      localStorage.setItem('roadguard_reports', JSON.stringify(toSave));
+    } catch(e) {
+      var noPhoto = reports.map(function(r) { var c = {}; for (var k in r) c[k] = r[k]; c.photo = null; return c; });
+      localStorage.setItem('roadguard_reports', JSON.stringify(noPhoto));
+    }
+  }
+
+  // ===== REPORT LIST =====
+  function updateReportList() {
+    var list = document.getElementById('reportList');
+    var clearBtn = document.getElementById('clearBtn');
+    var exportBtn = document.getElementById('exportBtn');
+    document.getElementById('reportCount').textContent = reports.length;
+
+    if (reports.length === 0) {
+      list.innerHTML = '<div class="no-reports"><div class="big-icon">📭</div><p>No reports yet. Submit your first hazard report above!</p></div>';
+      clearBtn.style.display = 'none';
+      exportBtn.style.display = 'none';
+      return;
+    }
+
+    clearBtn.style.display = 'inline-block';
+    exportBtn.style.display = 'inline-block';
+    var typeIcons = { 'Pothole': '🕳️', 'Waterlogging': '🌊', 'Accident Spot': '⚠️' };
+    var sevColors = { 'Low': '#22c55e', 'Moderate': '#eab308', 'Medium': '#f97316', 'High': '#ef4444', 'Critical': '#dc2626' };
+    var html = '';
+
+    for (var i = reports.length - 1; i >= 0; i--) {
+      var r = reports[i];
+      var sc = sevColors[r.severityLabel] || '#f97316';
+      html += '<div class="report-item">';
+      html += '<div class="ri-header"><span class="ri-type">' + (typeIcons[r.type] || '📍') + ' ' + r.type + '</span><span class="ri-time">' + r.displayTime + '</span></div>';
+      html += '<div class="ri-coords">📍 ' + r.lat.toFixed(6) + '°N, ' + r.lng.toFixed(6) + '°E</div>';
+      if (r.severityLabel) html += '<span class="ri-severity" style="background:' + sc + '20;color:' + sc + '">' + r.severityLabel + '</span>';
+      if (r.description) html += '<div class="ri-desc">📝 ' + r.description + '</div>';
+      if (r.photo && r.photo.length > 100) html += '<img class="ri-photo" src="' + r.photo + '" alt="Photo">';
+      html += '<button class="delete-btn" data-id="' + r.id + '">🗑️ Delete</button>';
+      html += '</div>';
+    }
+    list.innerHTML = html;
+
+    // Attach delete handlers
+    list.querySelectorAll('.delete-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id = parseInt(this.getAttribute('data-id'));
+        reports = reports.filter(function(r) { return r.id !== id; });
+        saveReports();
+        updateReportList();
+      });
+    });
+  }
+
+  document.getElementById('clearBtn').addEventListener('click', function() {
+    if (confirm('Delete all reports? This cannot be undone.')) {
+      reports = [];
+      localStorage.removeItem('roadguard_reports');
+      updateReportList();
+    }
+  });
+
+  function exportReports() {
+    if (reports.length === 0) { alert('No reports to export!'); return; }
+    var csv = 'ID,Type,Severity,Latitude,Longitude,Description,Timestamp\n';
+    reports.forEach(function(r) {
+      csv += r.id + ',' + r.type + ',' + (r.severityLabel || 'N/A') + ',' + r.lat.toFixed(6) + ',' + r.lng.toFixed(6) + ',"' + (r.description || '') + '",' + r.displayTime + '\n';
+    });
+    var blob = new Blob([csv], { type: 'text/csv' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'roadguard_reports.csv';
+    a.click();
+  }
+  document.getElementById('exportBtn').addEventListener('click', exportReports);
+  document.getElementById('civicExportBtn').addEventListener('click', exportReports);
+
+  // ===== HOME STATS =====
+  function updateHomeStats() {
+    document.getElementById('stat-reports').textContent = reports.length;
+    var zones = {}, potholes = 0, waterlog = 0;
+    reports.forEach(function(r) {
+      zones[Math.round(r.lat * 100) + ',' + Math.round(r.lng * 100)] = true;
+      if (r.type === 'Pothole') potholes++;
+      if (r.type === 'Waterlogging') waterlog++;
+    });
+    document.getElementById('stat-hotspots').textContent = Object.keys(zones).length;
+    document.getElementById('stat-potholes').textContent = potholes;
+    document.getElementById('stat-waterlog').textContent = waterlog;
+  }
+
+  // ===== HEATMAP =====
+  function initHeatmap() {
+    if (heatmapObj) { heatmapObj.remove(); heatmapObj = null; }
+    var lat = currentLat || 11.0168, lng = currentLng || 76.9558;
+    heatmapObj = L.map('heatmap').setView([lat, lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(heatmapObj);
+
+    if (currentLat && currentLng) {
+      L.circleMarker([currentLat, currentLng], { radius: 10, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.9, weight: 2 })
+        .addTo(heatmapObj).bindPopup('<b>📍 You are here</b>');
+    }
+
+    var typeColors = { 'Pothole': '#ef4444', 'Waterlogging': '#3b82f6', 'Accident Spot': '#f97316' };
+    var typeIcons = { 'Pothole': '🕳️', 'Waterlogging': '🌊', 'Accident Spot': '⚠️' };
+    var heatPoints = [];
+
+    reports.forEach(function(r) {
+      var color = typeColors[r.type] || '#f97316';
+      L.circleMarker([r.lat, r.lng], { radius: 8, color: color, fillColor: color, fillOpacity: 0.7 })
+        .addTo(heatmapObj)
+        .bindPopup('<b>' + (typeIcons[r.type] || '') + ' ' + r.type + '</b><br>📍 ' + r.lat.toFixed(4) + ', ' + r.lng.toFixed(4) + '<br>⚡ ' + (r.severityLabel || 'N/A') + '<br>🕐 ' + r.displayTime + (r.description ? '<br>📝 ' + r.description : ''));
+      heatPoints.push([r.lat, r.lng, (r.severity || 3) / 5]);
+    });
+
+    if (heatPoints.length > 0) {
+      L.heatLayer(heatPoints, { radius: 35, blur: 25, maxZoom: 17, gradient: { 0.2: '#3b82f6', 0.4: '#eab308', 0.6: '#f97316', 0.8: '#ef4444', 1: '#dc2626' } }).addTo(heatmapObj);
+    }
+
+    if (reports.length === 0) {
+      L.popup().setLatLng([lat, lng]).setContent('📭 No reports yet!<br>Go to Report tab to add hazards.').openOn(heatmapObj);
+    }
+
+    document.getElementById('mapReportCount').textContent = reports.length;
+    var zones = {};
+    reports.forEach(function(r) { zones[Math.round(r.lat * 100) + ',' + Math.round(r.lng * 100)] = true; });
+    document.getElementById('mapZoneCount').textContent = Object.keys(zones).length;
+
+    setTimeout(function() { heatmapObj.invalidateSize(); }, 200);
+  }
+
+  // ===== ROUTE MAP =====
+  function initRouteMap() {
+    if (routemapObj) { routemapObj.remove(); routemapObj = null; }
+    var lat = currentLat || 11.0168, lng = currentLng || 76.9558;
+    routemapObj = L.map('routemap').setView([lat, lng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(routemapObj);
+
+    if (currentLat && currentLng) {
+      L.marker([currentLat, currentLng]).addTo(routemapObj).bindPopup('📍 Your Location').openPopup();
+    }
+
+    reports.forEach(function(r) {
+      L.circle([r.lat, r.lng], { radius: 200, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.15, weight: 1 }).addTo(routemapObj);
+      L.circleMarker([r.lat, r.lng], { radius: 6, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.8 })
+        .addTo(routemapObj).bindPopup('⚠️ ' + r.type + ' — Avoid this zone!');
+    });
+
+    document.getElementById('routeHazardInfo').textContent = reports.length + ' hazard zone(s) detected';
+    setTimeout(function() { routemapObj.invalidateSize(); }, 200);
+  }
+
+  document.getElementById('routeBtn').addEventListener('click', function() {
+    var dest = document.getElementById('routeTo').value;
+    if (!dest) { alert('Please enter a destination!'); return; }
+    alert('🛣️ Safe Route calculated!\n\nAvoiding ' + reports.length + ' hazard zone(s).\n\n💡 In the full version, this uses OSRM routing API for actual safest path.');
+  });
+
+  // ===== CIVIC DASHBOARD =====
+  function updateCivicDashboard() {
+    var potholes = 0, water = 0, accident = 0;
+    reports.forEach(function(r) {
+      if (r.type === 'Pothole') potholes++;
+      if (r.type === 'Waterlogging') water++;
+      if (r.type === 'Accident Spot') accident++;
+    });
+    document.getElementById('civic-total').textContent = reports.length;
+    document.getElementById('civic-potholes').textContent = potholes;
+    document.getElementById('civic-water').textContent = water;
+    document.getElementById('civic-accident').textContent = accident;
+
+    // Bar chart
+    var max = Math.max(potholes, water, accident, 1);
+    document.getElementById('bar-val-1').textContent = potholes;
+    document.getElementById('bar-
